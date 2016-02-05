@@ -14,32 +14,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
+var dbUrl = 'mongodb://127.0.0.1:27017/nnse';
+require('./resources/db/db').init(dbUrl);
+
 app.use('/', routes);
 app.use('/tenants', tenants);
 
-// catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
-        error: {}
+        error: app.get('env') === 'development' ? err : {}
     });
 });
+
 
 module.exports = app;
