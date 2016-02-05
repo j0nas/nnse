@@ -12,7 +12,8 @@ module.exports = {
             });
 
         var dbConnectionShutdown = function () {
-            mongoose.connection.disconnect()
+            mongoose.connection.close();
+            process.exit();
         };
 
         process
