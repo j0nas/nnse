@@ -3,8 +3,6 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
 
-var tenants = require('./routes/tenants');
-
 var app = express();
 
 // uncomment after placing your favicon in /public
@@ -13,10 +11,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-var dbUrl = 'mongodb://127.0.0.1:27017/nnse';
-require('./db/db').init(dbUrl);
+require('./db/db').init('mongodb://127.0.0.1:27017/nnse');
 
-app.use('/tenants', tenants);
+var TenantModel = require('./models/Tenant');
+var tenantAPI = require('./routes/resourceAPI')(TenantModel);
+app.use('/tenants', tenantAPI);
 
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
@@ -32,6 +31,5 @@ app.use(function (err, req, res, next) {
     };
     console.log(JSON.stringify(errs));
 });
-
 
 module.exports = app;
