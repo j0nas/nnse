@@ -6,6 +6,7 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('json spaces', 2);
 
 require('./db/db').init('mongodb://127.0.0.1:27017/nnse');
 

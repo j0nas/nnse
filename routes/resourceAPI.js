@@ -4,9 +4,9 @@ var router = express.Router();
 module.exports = function (model) {
 
     router.get('/', function (req, res, next) {
-        model.find(function (err, tenants) {
+        model.find(function (err, items) {
             if (err) return next(err);
-            res.json(tenants);
+            res.json(items);
         })
     });
 
@@ -18,9 +18,9 @@ module.exports = function (model) {
     });
 
     router.get('/:id', function (req, res, next) {
-        model.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
+        model.findById(req.params.id, req.body, function (err, item) {
             if (err) return next(err);
-            res.json(post);
+            res.json(item);
         })
     });
 
