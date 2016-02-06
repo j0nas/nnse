@@ -5,5 +5,7 @@ import Tenants from '../components/tenant';
 
 fetch('/tenants/')
     .then(res => res.json())
-    .then(res => ReactDOM.render((<Tenants {...res[4]} />), document.getElementById('root')));
+    .then(res => res.forEach(tenant =>
+        ReactDOM.render((<Tenants {...tenant} />), document.getElementById('root'))
+    ));
 
