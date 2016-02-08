@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Tenants from '../components/tenant';
+import Tenant from '../components/tenant';
 
 fetch('/tenants/')
     .then(res => res.json())
     .then(res => res.forEach(tenant =>
-        ReactDOM.render((<Tenants {...tenant} />), document.getElementById('root'))
+        ReactDOM.render((<Tenant {...tenant} />), document.getElementById('root'))
     ));
 
