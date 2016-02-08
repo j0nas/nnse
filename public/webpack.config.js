@@ -17,7 +17,7 @@ module.exports = {
     },
     plugins: [
         new webpack.ProvidePlugin({
-            'Promise': 'es6-promise',
+            'Promise': 'promise-polyfill',
             'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
         })
     ]
