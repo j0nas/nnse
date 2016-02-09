@@ -1,7 +1,5 @@
-var express = require('express');
-var router = express.Router();
-
 module.exports = function (model) {
+    var router = require('express').Router();
 
     router.get('/', function (req, res, next) {
         model.find(function (err, items) {

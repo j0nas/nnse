@@ -1,7 +1,6 @@
-var mongoose = require('mongoose');
-
 module.exports = {
     init: function (dbUrl) {
+        var mongoose = require('mongoose');
         mongoose.connect(dbUrl);
         mongoose.connection
             .on('error', function (err) {
@@ -19,5 +18,7 @@ module.exports = {
         process
             .on('SIGINT', dbConnectionShutdown)
             .on('SIGTERM', dbConnectionShutdown);
+
+        return mongoose;
     }
 };
