@@ -19,7 +19,8 @@ app.use('/tenants/', decoratedTenantAPI);
 
 var mailboxModel = require('./models/Mailbox');
 var mailboxAPI = require('./routes/resourceAPI')(mailboxModel);
-app.use('/mailboxes/', mailboxAPI);
+var decoratedMailboxAPI = require('./routes/apiDecorators/mailboxDecorator')(mailboxAPI, mailboxModel);
+app.use('/mailboxes/', decoratedMailboxAPI);
 
 app.use(function (req, res, next) {
     console.log(req);
