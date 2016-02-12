@@ -8,13 +8,13 @@ module.exports = function (router, tenantModel) {
             })
     });
 
-    router.put('/:id/mailbox', (req, res, next) => {
+    router.put('/:tenantId/mailbox/:mailboxId', (req, res, next) => {
         tenantModel
-            .findByIdAndUpdate(req.params.id, {_mailbox: req.body.id}, {new: true})
+            .findByIdAndUpdate(req.params.tenantId, {_mailbox: req.params.mailboxId}, {new: true})
             .populate('_mailbox')
             .exec((err, tenant) => {
                 if (err) return next(err);
-                tenant._mailbox.tenants.push(req.params.id);
+                tenant._mailbox.tenants.push(req.params.tenantId);
                 tenant._mailbox.save((saveErr) => {
                     if (saveErr) next(saveErr);
                     res.json(tenant);
@@ -22,7 +22,6 @@ module.exports = function (router, tenantModel) {
             });
     });
 
-    // TODO change PUT ect to use /:id2 instead of body.id
     router.delete('/:id/mailbox', (req, res, next) => {
         tenantModel
             .findById(req.params.id)
