@@ -3,7 +3,7 @@ module.exports = function (router, tenantModel) {
         tenantModel.findById(req.params.id)
             .populate('_mailbox')
             .exec((err, tenant) => {
-                if (err) return next(err);
+                if (err || tenant === null) return next(err);
                 res.json(tenant);
             })
     });
@@ -13,7 +13,7 @@ module.exports = function (router, tenantModel) {
             .findByIdAndUpdate(req.params.tenantId, {_mailbox: req.params.mailboxId}, {new: true})
             .populate('_mailbox')
             .exec((err, tenant) => {
-                if (err) return next(err);
+                if (err || tenant === null) return next(err);
                 tenant._mailbox.tenants.push(req.params.tenantId);
                 tenant._mailbox.save((saveErr) => {
                     if (saveErr) next(saveErr);
