@@ -10,7 +10,8 @@
     "express": "~4.13.1",
     "express-favicon": "^1.0.1",
     "mongodb": "^2.1.6",
-    "mongoose": "^4.4.2"
+    "mongoose": "^4.4.2",
+    "pluralize": "^1.2.1"
   },
   "description": "NNSE backend",
   "main": "app.js",

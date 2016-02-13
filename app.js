@@ -10,31 +10,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public/img/favicon.ico')));
 app.set('json spaces', 2);
 
-var mongoose = require('./db/db').init('mongodb://127.0.0.1:27017/nnse');
+var mongoose = require('./db/db');
+mongoose.init('mongodb://127.0.0.1:27017/nnse');
 
-var tenantModel = require('./models/Tenant');
-var tenantAPI = require('./routes/resourceAPI')(tenantModel);
-var decoratedTenantAPI = require('./routes/apiDecorators/tenantDecorator')(tenantAPI, tenantModel);
-app.use('/tenants/', decoratedTenantAPI);
+var entityManager = require('./routes/entityManager');
+entityManager.init(app);
+entityManager.setupEntities('Tenant', 'Mailbox', 'Lease');
 
-var mailboxModel = require('./models/Mailbox');
-var mailboxAPI = require('./routes/resourceAPI')(mailboxModel);
-var decoratedMailboxAPI = require('./routes/apiDecorators/mailboxDecorator')(mailboxAPI, mailboxModel);
-app.use('/mailboxes/', decoratedMailboxAPI);
-
-var leaseModel = require('./models/Mailbox');
-var leaseAPI = require('./routes/resourceAPI')(leaseModel);
-//var decoratedLeaseAPI = require('./routes/apiDecorators/mailboxDecorator')(mailboxAPI, mailboxModel);
-app.use('/mailboxes/', leaseAPI);
-
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     console.log(req);
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
     res.status(err.status || 500);
     var errs = {
         message: err.message,
