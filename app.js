@@ -22,6 +22,11 @@ var mailboxAPI = require('./routes/resourceAPI')(mailboxModel);
 var decoratedMailboxAPI = require('./routes/apiDecorators/mailboxDecorator')(mailboxAPI, mailboxModel);
 app.use('/mailboxes/', decoratedMailboxAPI);
 
+var leaseModel = require('./models/Mailbox');
+var leaseAPI = require('./routes/resourceAPI')(leaseModel);
+//var decoratedLeaseAPI = require('./routes/apiDecorators/mailboxDecorator')(mailboxAPI, mailboxModel);
+app.use('/mailboxes/', leaseAPI);
+
 app.use(function (req, res, next) {
     console.log(req);
     var err = new Error('Not Found');
