@@ -1,8 +1,10 @@
 var app;
+var pathPrefix;
 
 module.exports = {
-    init: function (appRef) {
-        app = appRef;
+    init: function (appReference, APIpathPrefix) {
+        app = appReference;
+        pathPrefix = APIpathPrefix;
     },
     setupEntities: function () {
         var path = require('path');
@@ -25,7 +27,13 @@ module.exports = {
             } catch (ignored) {
             }
 
+
             var route = '/' + pluralize(entityName.toLowerCase()) + '/';
+            if (pathPrefix !== undefined) {
+                route = '/' + pathPrefix + route;
+                console.log(route);
+            }
+
             var APItoUse = decoratedAPI === undefined ? baseAPI : decoratedAPI;
             app.use(route, APItoUse);
         }

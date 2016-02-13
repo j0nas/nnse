@@ -14,11 +14,10 @@ var mongoose = require('./db/db');
 mongoose.init('mongodb://127.0.0.1:27017/nnse');
 
 var entityManager = require('./routes/entityManager');
-entityManager.init(app);
+entityManager.init(app, 'api');
 entityManager.setupEntities('Tenant', 'Mailbox', 'Lease');
 
 app.use((req, res, next) => {
-    console.log(req);
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
