@@ -20,10 +20,10 @@ module.exports = function (router, mailboxModel) {
             });
     });
 
-    router.delete('/:id/tenant', (req, res, next) => {
+    router.delete('/:mailboxId/tenant/:tenantId', (req, res, next) => {
         mailboxModel.findByIdAndUpdate(
-            req.params.id,
-            {$pull: {"tenants": req.body.id}},
+            req.params.mailboxId,
+            {$pull: {"tenants": req.params.tenantId}},
             {new: true},
             (err, model) => {
                 if (err) return next(err);

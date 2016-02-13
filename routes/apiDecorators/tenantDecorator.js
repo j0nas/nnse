@@ -28,18 +28,21 @@ module.exports = function (router, tenantModel) {
             .populate('_mailbox')
             .exec((tenantFetchError, tenant) => {
                 if (tenantFetchError) return next(tenantFetchError);
-                var arr = tenant._mailbox.tenants;
-                const index = arr.indexOf(req.params.id);
-                arr.splice(index, 1);
 
-                tenant._mailbox.save((mailboxUpdateError) => {
-                    if (mailboxUpdateError) return next(mailboxUpdateError);
-                    tenant._mailbox = null;
-                    tenant.save((tenantUpdateError) => {
-                        if (tenantUpdateError) return next(tenantUpdateError);
-                        res.json(tenant);
+                if (tenant._mailbox !== null) {
+                    var mailboxTenants = tenant._mailbox.tenants;
+                    const index = mailboxTenants.indexOf(req.params.id);
+                    mailboxTenants.splice(index, 1);
+
+                    tenant._mailbox.save((mailboxUpdateError) => {
+                        if (mailboxUpdateError) return next(mailboxUpdateError);
+                        tenant._mailbox = undefined;
+                        tenant.save((tenantUpdateError) => {
+                            if (tenantUpdateError) return next(tenantUpdateError);
+                            res.json(tenant);
+                        });
                     });
-                });
+                }
             });
     });
 
