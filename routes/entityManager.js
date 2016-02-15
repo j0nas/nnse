@@ -31,7 +31,6 @@ module.exports = {
             var route = '/' + pluralize(entityName.toLowerCase()) + '/';
             if (pathPrefix !== undefined) {
                 route = '/' + pathPrefix + route;
-                console.log(route);
             }
 
             var APItoUse = decoratedAPI === undefined ? baseAPI : decoratedAPI;

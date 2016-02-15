@@ -13,7 +13,7 @@
     "mongoose": "^4.4.2",
     "pluralize": "^1.2.1"
   },
-  "description": "NNSE backend",
+  "description": "NNSE tenant management application",
   "main": "app.js",
   "repository": {
     "type": "git",
