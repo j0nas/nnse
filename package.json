@@ -24,5 +24,10 @@
   "bugs": {
     "url": "https://github.com/j0nas/nnse/issues"
   },
-  "homepage": "https://github.com/j0nas/nnse#readme"
+  "homepage": "https://github.com/j0nas/nnse#readme",
+  "devDependencies": {
+    "eslint": "^2.1.0",
+    "eslint-config-airbnb": "^5.0.1",
+    "eslint-plugin-react": "^3.16.1"
+  }
 }
