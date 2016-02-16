@@ -1,40 +1,23 @@
-module.exports = function (model) {
-    var router = require('express').Router();
+module.exports = function(model) {
+    var router = require('express').Router(); // eslint-disable-line new-cap
 
-    router.get('/', function (req, res, next) {
-        model.find(function (err, items) {
-            if (err) return next(err);
-            res.json(items);
-        })
-    });
+    router.get('/', (req, res, next) =>
+      model.find((err, items) => err ? next(err) : res.json(items)));
 
-    router.post('/', function (req, res, next) {
-        model.create(req.body, function (err, post) {
-            if (err) return next(err);
-            res.json(post);
-        })
-    });
+    router.post('/', (req, res, next) =>
+      model.create(req.body, (err, post) => err ? next(err) : res.json(post)));
 
-    router.get('/:id', function (req, res, next) {
-        model.findById(req.params.id, req.body, function (err, item) {
-            if (err) return next(err);
-            res.json(item);
-        })
-    });
+    router.get('/:id', (req, res, next) =>
+    model.findById(req.params.id, req.body,
+        (err, item) => err ? next(err) : res.json(item)));
 
-    router.put('/:id', function (req, res, next) {
-        model.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
-            if (err) return next(err);
-            res.json(post);
-        });
-    });
+    router.put('/:id', (req, res, next) =>
+      model.findByIdAndUpdate(req.params.id, req.body,
+        (err, post) => err ? next(err) : res.json(post)));
 
-    router.delete('/:id', function (req, res, next) {
-        model.findByIdAndRemove(req.params.id, req.body, function (err, post) {
-            if (err) return next(err);
-            res.json(post);
-        })
-    });
+    router.delete('/:id', (req, res, next) =>
+    model.findByIdAndRemove(req.params.id, req.body,
+        (err, post) => err ? next(err) : res.json(post)));
 
     return router;
 };

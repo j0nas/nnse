@@ -1,31 +1,33 @@
-module.exports = function (router, mailboxModel) {
+module.exports = function(router, mailboxModel) {
     router.get('/:id/tenant', (req, res, next) => {
         mailboxModel.findById(req.params.id)
             .populate('tenants')
-            .exec((err, mailbox) => {
-                if (err) return next(err);
-                res.json(mailbox);
-            })
+            .exec((err, mailbox) => err ? next(err) : res.json(mailbox));
     });
 
     router.put('/:mailboxId/tenant/:tenantId', (req, res, next) => {
         mailboxModel
-            .findByIdAndUpdate(req.params.mailboxId, {$push: {"tenants": req.params.tenantId}}, {new: true})
+            .findByIdAndUpdate(
+                req.params.mailboxId,
+                {$push: {tenants: req.params.tenantId}},
+                {new: true})
             .populate('tenants')
             .exec((err, mailbox) => {
-                if (err) return next(err);
+                if (err) {
+                    return next(err);
+                }
 
                 var tenantsLength = mailbox.tenants.length - 1;
                 var addedTenant = mailbox.tenants[tenantsLength];
                 addedTenant._mailbox = mailbox._id;
-                addedTenant.save((tenantSaveError) => {
-                    if (tenantSaveError) return next(tenantSaveError);
+                addedTenant.save(tenantSaveError => {
+                    if (tenantSaveError) {
+                      return next(tenantSaveError);
+                  }
 
-                    mailbox.save((mailboxSaveError) => {
-                        if (mailboxSaveError) return next(mailboxSaveError);
-                        res.json(mailbox);
-                    });
-                })
+                    mailbox.save(tenantErr =>
+                    tenantErr ? next(tenantErr) : res.json(mailbox));
+                });
             });
     });
 
@@ -34,23 +36,25 @@ module.exports = function (router, mailboxModel) {
             .findById(req.params.mailboxId)
             .populate('tenants')
             .exec((err, mailbox) => {
-                if (err) return next(err);
+                if (err) {
+                    return next(err);
+                }
 
                 var tenants = mailbox.tenants;
-                var matchingTenantsArray = tenants.filter((tenant) => tenant._id == req.params.tenantId);
+                var matchingTenantsArray =
+                  tenants.filter(tenant => tenant._id === req.params.tenantId);
                 var tenant = matchingTenantsArray[0];
 
                 tenant._mailbox = undefined;
-                tenant.save((updateTenantError) => {
-                    if (updateTenantError) return next(updateTenantError);
+                tenant.save(updateTenantError => {
+                    if (updateTenantError) {
+                      return next(updateTenantError);
+                  }
 
-                    mailbox.tenants = mailbox.tenants.filter((tenant) => tenant._id != req.params.tenantId);
-                    mailbox.save((updateMailboxError) => {
-                        if (updateMailboxError) return next(updateMailboxError);
-                        res.json(mailbox);
-                    })
+                    mailbox.tenants = mailbox.tenants.filter(
+                    tenant => tenant._id !== req.params.tenantId);
+                    mailbox.save(err => err ? next(err) : res.json(mailbox));
                 });
-
             });
     });
 

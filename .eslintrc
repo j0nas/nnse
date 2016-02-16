@@ -1,7 +1,16 @@
 {
-  "extends": "airbnb",
+  "extends": "google",
   "env": {
-    "browser": true,
-    "node": true
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "indent": [2, 4]
   }
 }
