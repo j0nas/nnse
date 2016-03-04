@@ -23,14 +23,14 @@ module.exports = {
             var decoratorPath = './apiDecorators/' + decoratorName;
 
             try {
-              decoratedAPI = require(decoratorPath)(baseAPI, model);
-          } catch (ignored) {
-        }
+                decoratedAPI = require(decoratorPath)(baseAPI, model);
+            } catch (ignored) {
+            }
 
             var route = '/' + pluralize(entityName.toLowerCase()) + '/';
             if (pathPrefix !== undefined) {
-              route = '/' + pathPrefix + route;
-          }
+                route = '/' + pathPrefix + route;
+            }
 
             var APItoUse = decoratedAPI === undefined ? baseAPI : decoratedAPI;
             app.use(route, APItoUse);

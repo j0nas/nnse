@@ -16,8 +16,8 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
         new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery',
+            '$': 'jquery',
+            'jQuery': 'jquery',
             'window.jQuery': 'jquery',
             'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
         })
@@ -32,7 +32,7 @@ module.exports = {
             {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml"},
             {test: /\.css$/, loader: 'style!css'},
             {test: /^((?!config).)*\.js?$/, exclude: /node_modules/, loader: 'babel?cacheDirectory'}
-            //{test: /.jsx?$/, loader: 'babel-loader', exclude: /node_modules/}
+            // {test: /.jsx?$/, loader: 'babel-loader', exclude: /node_modules/}
         ]
     }
 };

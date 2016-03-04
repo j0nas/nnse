@@ -1,6 +1,10 @@
 {
   "extends": "google",
+  "parser": "babel-eslint",
+  "strict": 0,
   "env": {
+    "shared-node-browser": true,
+    "browser": true,
     "node": true,
     "es6": true
   },
@@ -11,6 +15,13 @@
     }
   },
   "rules": {
-    "indent": [2, 4]
-  }
+    "indent": [2, 4],
+    "react/jsx-uses-react": 1,
+    "react/jsx-uses-vars": 1,
+    "max-len": [1, 120]
+  },
+  "plugins": [
+    "react"
+  ]
+
 }

@@ -40,8 +40,8 @@ module.exports = function(router, tenantModel) {
 
                     tenant._mailbox.save(mailboxUpdateError => {
                         if (mailboxUpdateError) {
-                          return next(mailboxUpdateError);
-                      }
+                            return next(mailboxUpdateError);
+                        }
 
                         tenant._mailbox = undefined;
                         tenant.save(err => err ? next(err) : res.json(tenant));

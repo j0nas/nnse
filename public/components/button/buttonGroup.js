@@ -2,12 +2,9 @@ import React from 'react';
 import Button from './button';
 
 export default React.createClass({
-    render: function() {
+    render: function () {
         var buttons = this.props.data.map((button, i) =>
-            (
-                <Button siteLink={button.ref} text={button.text} key={"" + i}/>
-            )
-        );
+            <Button siteLink={button.ref} text={button.text} key={i}/>);
 
         return (
             <div className="buttonList">
