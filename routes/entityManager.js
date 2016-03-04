@@ -11,29 +11,29 @@ module.exports = {
         var pluralize = require('pluralize');
 
         for (var i = 0; i < arguments.length - 1; i++) {
-          var entityName = arguments[i];
+            var entityName = arguments[i];
 
-          var modelPath = path.join('../models/', entityName);
-          var model = require(modelPath);
+            var modelPath = path.join('../models/', entityName);
+            var model = require(modelPath);
 
-          var baseAPI = require('../routes/resourceAPI')(model);
+            var baseAPI = require('../routes/resourceAPI')(model);
 
-          var decoratedAPI;
-          var decoratorName = entityName.toLowerCase() + 'Decorator';
-          var decoratorPath = './apiDecorators/' + decoratorName;
+            var decoratedAPI;
+            var decoratorName = entityName.toLowerCase() + 'Decorator';
+            var decoratorPath = './apiDecorators/' + decoratorName;
 
-          try {
-            decoratedAPI = require(decoratorPath)(baseAPI, model);
-        } catch (ignored) {
-      }
-
-          var route = '/' + pluralize(entityName.toLowerCase()) + '/';
-          if (pathPrefix !== undefined) {
-            route = '/' + pathPrefix + route;
+            try {
+              decoratedAPI = require(decoratorPath)(baseAPI, model);
+          } catch (ignored) {
         }
 
-          var APItoUse = decoratedAPI === undefined ? baseAPI : decoratedAPI;
-          app.use(route, APItoUse);
-      }
+            var route = '/' + pluralize(entityName.toLowerCase()) + '/';
+            if (pathPrefix !== undefined) {
+              route = '/' + pathPrefix + route;
+          }
+
+            var APItoUse = decoratedAPI === undefined ? baseAPI : decoratedAPI;
+            app.use(route, APItoUse);
+        }
     }
 };

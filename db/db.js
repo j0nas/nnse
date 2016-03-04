@@ -12,9 +12,9 @@ module.exports = {
             });
 
         var dbConnectionShutdown = function() {
-          mongoose.connection.close();
-          process.exit();
-      };
+            mongoose.connection.close();
+            process.exit();
+        };
 
         process
             .on('SIGINT', dbConnectionShutdown)

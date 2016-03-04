@@ -22,8 +22,8 @@ module.exports = function(router, mailboxModel) {
                 addedTenant._mailbox = mailbox._id;
                 addedTenant.save(tenantSaveError => {
                     if (tenantSaveError) {
-                      return next(tenantSaveError);
-                  }
+                        return next(tenantSaveError);
+                    }
 
                     mailbox.save(tenantErr =>
                     tenantErr ? next(tenantErr) : res.json(mailbox));
@@ -48,8 +48,8 @@ module.exports = function(router, mailboxModel) {
                 tenant._mailbox = undefined;
                 tenant.save(updateTenantError => {
                     if (updateTenantError) {
-                      return next(updateTenantError);
-                  }
+                        return next(updateTenantError);
+                    }
 
                     mailbox.tenants = mailbox.tenants.filter(
                     tenant => tenant._id !== req.params.tenantId);

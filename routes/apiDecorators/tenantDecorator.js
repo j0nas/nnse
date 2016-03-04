@@ -39,13 +39,13 @@ module.exports = function(router, tenantModel) {
                     mailboxTenants.splice(index, 1);
 
                     tenant._mailbox.save(mailboxUpdateError => {
-                      if (mailboxUpdateError) {
-                        return next(mailboxUpdateError);
-                    }
+                        if (mailboxUpdateError) {
+                          return next(mailboxUpdateError);
+                      }
 
-                      tenant._mailbox = undefined;
-                      tenant.save(err => err ? next(err) : res.json(tenant));
-                  });
+                        tenant._mailbox = undefined;
+                        tenant.save(err => err ? next(err) : res.json(tenant));
+                    });
                 }
             });
     });

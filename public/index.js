@@ -1,8 +1,13 @@
+import 'babel-polyfill';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ButtonGroup from '../components/button/buttonGroup';
-import Tenant from '../components/tenant';
-import TenantSelectList from '../components/tenant/TenantSelectList';
+
+import ButtonGroup from './components/button/buttonGroup';
+
+import './css/main.css';
+import Tenant from './components/tenant';
+import TenantSelectList from './components/tenant/TenantSelectList';
 
 var links = [
     {ref: '/api/tenants', text: 'Leietakere'},

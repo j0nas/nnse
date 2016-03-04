@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, {PropTypes} from 'react';
 
 const TenantsSelect = props =>
     <select name="tenants" className="tenantsSelect">

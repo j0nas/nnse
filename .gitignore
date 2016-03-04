@@ -7,6 +7,7 @@ pids
 *.seed
 lib-cov
 coverage
+/public/build
 .grunt
 .lock-wscript
 build/Release
