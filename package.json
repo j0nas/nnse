@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node ./app.js",
     "lint": "eslint --ignore-path .gitignore --fix .",
     "pretest": "npm run lint"
   },
@@ -12,7 +12,7 @@
     "express": "~4.13.4",
     "express-favicon": "^1.0.1",
     "mongodb": "^2.1.7",
-    "mongoose": "^4.4.3",
+    "mongoose": "^4.4.6",
     "pluralize": "^1.2.1"
   },
   "description": "NNSE tenant management application",
@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/j0nas/nnse#readme",
   "devDependencies": {
-    "eslint": "^2.1.0",
-    "eslint-plugin-react": "^3.16.1",
+    "eslint": "^2.2.0",
+    "eslint-plugin-react": "^4.1.0",
     "eslint-config-google": "^0.4.0"
   }
 }
