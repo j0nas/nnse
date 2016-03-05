@@ -7,8 +7,8 @@ module.exports = {
         pathPrefix = APIpathPrefix;
     },
     setupEntities: function() {
-        var path = require('path');
-        var pluralize = require('pluralize');
+        const path = require('path');
+        const pluralize = require('pluralize');
 
         for (var i = 0; i < arguments.length - 1; i++) {
             var entityName = arguments[i];
@@ -34,6 +34,7 @@ module.exports = {
 
             var APItoUse = decoratedAPI === undefined ? baseAPI : decoratedAPI;
             app.use(route, APItoUse);
+            console.log('Set up route ' + route);
         }
     }
 };

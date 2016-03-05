@@ -11,12 +11,15 @@ var app = express();
 app.use(webpackDevMiddleware(compiler, {noInfo: true, publicPath: config.output.publicPath}));
 app.use(webpackHotMiddleware(compiler));
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
 const mongoose = require('./db/db');
 mongoose.init('mongodb://127.0.0.1:27017/nnse');
 
 const entityManager = require('./routes/entityManager');
 entityManager.init(app, 'api');
-entityManager.setupEntities('Tenant', 'Mailbox', 'Lease');
+entityManager.setupEntities('Tenant', 'Mailbox', 'Lease', 'Room', 'Invoice');
 
 const indexHtmlPath = path.join(__dirname, 'public', 'index.html');
 app.use('*', (req, res) => res.sendFile(indexHtmlPath));
