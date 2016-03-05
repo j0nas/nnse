@@ -15,14 +15,11 @@ export default class TenantTable extends React.Component {
                 </thead>
                 <tbody>
                 {this.props.tenants.map(tenant =>
-                    <tr>
+                    <tr key={tenant._id}>
                         <td>{tenant._id}</td>
                         <td>{tenant.name_first} {tenant.name_middle} {tenant.name_last}</td>
-                        <td>E-post</td>
                         <td>{tenant.email}</td>
-                        <td>Telefon</td>
                         <td>{tenant.phone}</td>
-                        <td>Postkasse</td>
                         <td>{tenant._mailbox}</td>
                     </tr>
                 )}

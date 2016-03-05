@@ -1,5 +1,5 @@
 import React from 'react';
-import TenantTable from '../Tenant/TenantTable'
+import TenantTable from '../Tenant/EntityTable'
 
 export default class ContentTable extends React.Component {
     constructor() {

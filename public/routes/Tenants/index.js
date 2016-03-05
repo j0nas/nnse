@@ -1,7 +1,7 @@
 import React from 'react';
 
 import StaticContentBox from '../components/ContentBox/StaticContentBox';
-import ContentTable from '../components/ContentTable/ContentTable'
+import ContentTable from '../components/Tenant/EntityTable'
 
 export default class  extends React.Component {
     constructor() {
@@ -22,10 +22,6 @@ export default class  extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <ContentTable title="Leietakere"/>
-            </div>
-        );
+        return <ContentTable title="Leietakere" entities={this.state.data} />;
     }
 }
