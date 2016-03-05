@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-
+import {Link} from 'react-router';
 
 export default class EntityTable extends React.Component {
     constructor(props) {
@@ -12,7 +12,7 @@ export default class EntityTable extends React.Component {
 
     filterTableValues(val) {
         var filter = {
-            '_id': true,
+            '_id': false,
             '__v': true
         };
 
@@ -25,6 +25,9 @@ export default class EntityTable extends React.Component {
     }
 
     getTableContent(key, value) {
+        if (key === '_id')
+            return <td key={value}><Link to={this.props.apipath + '/' + value}>{value}</Link></td>;
+
         if (!this.filterTableValues(key))
             return <td key={value}>{value}</td>;
     }
@@ -35,7 +38,6 @@ export default class EntityTable extends React.Component {
                 <div className="containerHeading">{this.props.title}</div>
                 <div className="carEvaluationInfo container-fluid">
                     <div className="row-fluid carEvaluationContent">
-
                         <table className="table">
                             <thead>
                             <tr>
@@ -45,18 +47,20 @@ export default class EntityTable extends React.Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {this.props.entities.map(entity =>
-                                <tr key={entity._id}>
-                                    {Object.keys(entity).map(key =>
-                                        this.getTableContent(key, entity[key]))}
-                                </tr>
-                            )}
+                            {this.props.entities.map(entity => this.getTableRow(entity))}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         );
+    }
+
+    getTableRow(entity) {
+        return <tr key={entity._id}>
+            {Object.keys(entity).map(key =>
+                this.getTableContent(key, entity[key]))}
+        </tr>
     }
 }
 

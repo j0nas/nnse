@@ -13,11 +13,11 @@ export default class Root extends React.Component {
         return (
             <Router history={browserHistory}>
                 <Route path="/" component={App}>
-                    <Route path="/invoices" component={Invoices}/>
-                    <Route path="/leases" component={Leases}/>
-                    <Route path="/mailboxes" component={Mailboxes}/>
-                    <Route path="/rooms" component={Rooms}/>
-                    <Route path="/tenants" component={Tenants}/>
+                    <Route path="/invoices" apipath="invoices" component={Invoices}/>
+                    <Route path="/leases" apipath="leases" component={Leases}/>
+                    <Route path="/mailboxes" apipath="mailboxes" component={Mailboxes}/>
+                    <Route path="/rooms" apipath="rooms" component={Rooms}/>
+                    <Route path="/tenants" apipath="tenants" component={Tenants}/>
                     <Route path="*"/>
                 </Route>
             </Router>

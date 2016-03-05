@@ -1,23 +1,23 @@
 import React from 'react';
 
 import StaticContentBox from '../components/ContentBox/StaticContentBox';
-import ContentTable from '../components/ContentTable/EntityTable'
+import EntityTable from '../components/ContentTable/EntityTable'
 
-export default class  extends React.Component {
-    constructor() {
-        super();
+export default class Tenants extends React.Component {
+    constructor(props) {
+        super(props);
         this.state = {
             data: []
         }
     }
 
     componentDidMount() {
-        fetch('/api/tenants')
+        fetch('/api/' + this.props.route.apipath)
             .then(data => data.json())
             .then(tenants => this.setState({data: tenants}));
     }
 
     render() {
-        return <ContentTable title="Leietakere" entities={this.state.data} />;
+        return <EntityTable title="Leietakere" entities={this.state.data} apipath={this.props.route.apipath}/>;
     }
 }
