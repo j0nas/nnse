@@ -26,6 +26,9 @@ export default class Entity extends React.Component {
     }
 
     render() {
-        return <EntityTable title="Leietakere" entities={this.state.data} apipath={this.props.route.path}/>;
+        return <div>
+            <EntityTable title={this.props.route.path} entities={this.state.data} apipath={this.props.route.path}/>
+            {this.props.children}
+        </div>;
     }
 }
