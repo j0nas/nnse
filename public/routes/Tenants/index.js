@@ -1,7 +1,7 @@
 import React from 'react';
 
 import StaticContentBox from '../components/ContentBox/StaticContentBox';
-import ContentTable from '../components/Tenant/EntityTable'
+import ContentTable from '../components/ContentTable/EntityTable'
 
 export default class  extends React.Component {
     constructor() {
@@ -12,10 +12,6 @@ export default class  extends React.Component {
     }
 
     componentDidMount() {
-        /*
-         {this.state.data.map(item =>
-         <StaticContentBox key={item._id} title="Leietaker" content={item} />)}
-         */
         fetch('/api/tenants')
             .then(data => data.json())
             .then(tenants => this.setState({data: tenants}));
