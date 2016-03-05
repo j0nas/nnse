@@ -19,7 +19,12 @@ mongoose.init('mongodb://127.0.0.1:27017/nnse');
 
 const entityManager = require('./routes/entityManager');
 entityManager.init(app, 'api');
-entityManager.setupEntities('Tenant', 'Mailbox', 'Lease', 'Room', 'Invoice');
+//entityManager.setupEntities('Mailbox', 'Tenant', 'Lease', 'Room', 'Invoice');
+entityManager.setupEntities('Mailbox');
+entityManager.setupEntities('Tenant');
+entityManager.setupEntities('Lease');
+entityManager.setupEntities('Room');
+entityManager.setupEntities('Invoice');
 
 const indexHtmlPath = path.join(__dirname, 'public', 'index.html');
 app.use('*', (req, res) => res.sendFile(indexHtmlPath));

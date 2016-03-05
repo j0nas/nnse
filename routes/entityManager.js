@@ -7,10 +7,10 @@ module.exports = {
         pathPrefix = APIpathPrefix;
     },
     setupEntities: function() {
-        const path = require('path');
-        const pluralize = require('pluralize');
+        var path = require('path');
+        var pluralize = require('pluralize');
 
-        for (var i = 0; i < arguments.length - 1; i++) {
+        for (var i = 0; i < arguments.length; i++) {
             var entityName = arguments[i];
 
             var modelPath = path.join('../models/', entityName);

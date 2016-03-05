@@ -2,7 +2,7 @@ import React from 'react';
 
 import ContentTable from '../components/ContentTable/EntityTable'
 
-export default class  extends React.Component {
+export default class Leases extends React.Component {
     constructor() {
         super();
         this.state = {
