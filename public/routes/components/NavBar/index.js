@@ -17,12 +17,12 @@ export default class NavBar extends React.Component {
                     </div>
                     <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul className="nav navbar-nav">
-                            <li className="active"><NavLink to="#">Hovedside</NavLink></li>
-                            <li><a href="/tenants">Leietakere</a></li>
-                            <li><a href="#">Rom</a></li>
-                            <li><a href="#">Postbokser</a></li>
-                            <li><a href="#">Faktura</a></li>
-                            <li><a href="#">Leieforhold</a></li>
+                            <li><NavLink to="/main">Hovedside</NavLink></li>
+                            <li><NavLink to="/tenants">Leietakere</NavLink></li>
+                            <li><NavLink to="/rooms">Rom</NavLink></li>
+                            <li><NavLink to="/mailboxes">Postbokser</NavLink></li>
+                            <li><NavLink to="/invoices">Faktura</NavLink></li>
+                            <li><NavLink to="/leases">Leieforhold</NavLink></li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
                             <li>

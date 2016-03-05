@@ -20,7 +20,7 @@ body {
 }
 
 .active {
-    color: green;
+    font-weight: bold;
 }
 
 .nav-header {
