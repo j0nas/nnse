@@ -1,0 +1,49 @@
+body {
+    background-color: #303756;
+}
+
+.carAttributeName {
+    font-style: italic;
+}
+
+.containerHeading {
+    text-transform: uppercase;
+    margin-top: 20px;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+.label {
+    color: black;
+    font-weight: normal;
+}
+
+.table-static-key-value-pair span {
+    font-weight: bold;
+}
+
+.carAttributeValue {
+    font-weight: bold;
+}
+
+.navbar {
+    border-radius: 0;
+}
+
+.carEvaluationInfoContain {
+    margin: 0 auto;
+}
+
+.carEvaluationInfo {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+}
+
+@media (max-width: 768px) {
+    .carEvaluationInfo {
+        border-radius: 0;
+        margin: 0;
+    }
+}

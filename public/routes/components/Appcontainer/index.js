@@ -1,14 +1,16 @@
 import React from 'react';
 
-import NavBarTop from '../NavBar/NavBar';
+import NavBar from '../NavBar/';
 
 import '../../../css/main.css';
+import '../../../css/carEvaluation.css';
+import '../../../css/style.css';
 
 export default class extends React.Component {
     render() {
         return (
             <div>
-                <NavBarTop />
+                <NavBar />
                 <div id="react-container">
                     {this.props.children}
                 </div>

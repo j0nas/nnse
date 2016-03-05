@@ -1,0 +1,40 @@
+body {
+    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+    background-color: #f4f5f9;
+}
+
+.background-custom-dark {
+    background-color: #252c41;
+}
+
+.background-custom-red {
+    background-color: #f1404b;
+}
+
+.background-custom-light-gray {
+    background-color: #f4f5f9;
+}
+
+.background-custom-dark-gray {
+    background-color: #dddfe6;
+}
+
+.active {
+    color: green;
+}
+
+.nav-header {
+    font-size: 150%;
+    color: #252c41;
+    text-transform: uppercase;
+    font-weight: lighter;
+}
+
+nav a {
+    text-transform: uppercase;
+    font-weight: lighter;
+}
+
+.search-bar {
+    margin: 0 auto;
+}
