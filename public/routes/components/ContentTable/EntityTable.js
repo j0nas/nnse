@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
+import React, {PropTypes} from "react";
+import {Link} from "react-router";
 
 export default class EntityTable extends React.Component {
     constructor(props) {
@@ -42,8 +42,7 @@ export default class EntityTable extends React.Component {
                             <thead>
                             <tr>
                                 {this.props.entities[0] &&
-                                Object.keys(this.props.entities[0]).map(prop =>
-                                    this.getTableHeaders(prop))}
+                                Object.keys(this.props.entities[0]).map(prop => this.getTableHeaders(prop))}
                             </tr>
                             </thead>
                             <tbody>
@@ -58,8 +57,7 @@ export default class EntityTable extends React.Component {
 
     getTableRow(entity) {
         return <tr key={entity._id}>
-            {Object.keys(entity).map(key =>
-                this.getTableContent(key, entity[key]))}
+            {Object.keys(entity).map(key => this.getTableContent(key, entity[key]))}
         </tr>
     }
 }
