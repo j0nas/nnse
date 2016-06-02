@@ -19,7 +19,7 @@ mongoose.init('mongodb://127.0.0.1:27017/nnse');
 
 const entityManager = require('./routes/entityManager');
 entityManager.init(app, 'api');
-//entityManager.setupEntities('Mailbox', 'Tenant', 'Lease', 'Room', 'Invoice');
+// entityManager.setupEntities('Mailbox', 'Tenant', 'Lease', 'Room', 'Invoice');
 entityManager.setupEntities('Mailbox');
 entityManager.setupEntities('Tenant');
 entityManager.setupEntities('Lease');
@@ -31,6 +31,8 @@ app.use('*', (req, res) => res.sendFile(indexHtmlPath));
 
 const port = 3000;
 app.listen(port, err => {
-    if (err) throw new Error(err);
+    if (err) {
+        throw new Error(err);
+    }
     console.log('Listening on http://localhost:' + port);
 });

@@ -1,4 +1,4 @@
-module.exports = function (model) {
+module.exports = function(model) {
     var router = require('express').Router(); // eslint-disable-line new-cap
 
     router.get('/', (req, res, next) =>

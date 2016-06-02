@@ -1,14 +1,12 @@
-import React from 'react';
-
-import StaticContentBox from '../components/ContentBox/StaticContentBox';
-import EntityTable from '../components/ContentTable/EntityTable'
+import React from "react";
+import EntityTable from "../components/ContentTable/EntityTable";
 
 export default class Entity extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             data: []
-        }
+        };
     }
 
     update(pathSuffix) {

@@ -10,7 +10,7 @@ export default class EntityDetails extends React.Component {
         super(props);
         this.state = {
             data: {}
-        }
+        };
     }
 
     deleteEntity() {

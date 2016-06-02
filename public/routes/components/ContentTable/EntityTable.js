@@ -12,24 +12,27 @@ export default class EntityTable extends React.Component {
 
     filterTableValues(val) {
         var filter = {
-            '_id': false,
-            '__v': true
+            _id: false,
+            __v: true
         };
 
         return filter[val];
     }
 
     getTableHeaders(prop) {
-        if (!this.filterTableValues(prop))
+        if (!this.filterTableValues(prop)) {
             return <th key={prop}>{prop}</th>;
+        }
     }
 
     getTableContent(key, value) {
-        if (key === '_id')
+        if (key === '_id') {
             return <td key={value}><Link to={this.props.apipath + '/' + value}>{value}</Link></td>;
+        }
 
-        if (!this.filterTableValues(key))
+        if (!this.filterTableValues(key)) {
             return <td key={value}>{value}</td>;
+        }
     }
 
     render() {
@@ -58,7 +61,7 @@ export default class EntityTable extends React.Component {
     getTableRow(entity) {
         return <tr key={entity._id}>
             {Object.keys(entity).map(key => this.getTableContent(key, entity[key]))}
-        </tr>
+        </tr>;
     }
 }
 
