@@ -5,40 +5,64 @@ import {browserHistory} from "react-router";
 export default class EntityForm extends React.Component {
     createUser() {
         const entityApiPath = '/api' + this.props.route.apipath;
-        fetch(entityApiPath, {method: 'DELETE'})
+        fetch(entityApiPath, {
+            method: 'POST',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify(this.getFormData())
+        })
             .then(browserHistory.push(this.props.route.apipath))
             .catch(err => console.log(err));
     }
 
-    render() {
-        // {this.props.fields.map(field => this.getTableHeaders(field))}
-        let obj;
+    getFormData() {
+        const formBody = {};
+        const entityObject = this.getEntityObject();
+        Object.keys(entityObject).map(field => formBody[field] = document.getElementById(field).value);
+        return formBody;
+    }
+
+    getEntityObject() {
         switch (this.props.route.apipath) {
             case "/tenants":
-                obj = {
+                return {
                     name_first: "Fornavn",
                     name_middle: "Mellomnavn",
                     name_last: "Etternavn",
                     email: "E-post",
-                    phone: "Telefon",
-                    _mailbox: "Postkasse"
+                    phone: "Telefon"
+                    // _mailbox: "Postkasse" TODO
                 };
                 break;
             default:
-                return <div></div>;
+                return null;
         }
+    }
+
+    render() {
+        const entityObject = this.getEntityObject();
+        if (entityObject == null) {
+            return <div></div>;
+        }
+
         return (
             <ContentBox>
-                <form>
-                {Object.keys(obj).map(key =>
-                    <span>
-                        <label>{obj[key]}</label>
-                        <input type="text" className="form-control"/>
-                        <br/>
-                    </span>)}
+                <form id="entity-form" name="entity-form" enctype="application/json">
+                    {Object.keys(entityObject).map(field => this.createFormInput(entityObject[field], field))}
                 </form>
                 <a className="btn btn-success" onClick={() => this.createUser()}>Opprett</a>
             </ContentBox>
+        );
+    }
+
+    createFormInput(label, fieldId) {
+        return (
+            <span>
+                <label>{label}</label>
+                <input type="text" id={fieldId} className="form-control"/>
+                <br/>
+            </span>
         );
     }
 }
