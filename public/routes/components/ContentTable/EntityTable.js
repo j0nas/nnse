@@ -38,7 +38,18 @@ export default class EntityTable extends React.Component {
     render() {
         return (
             <div className="carEvaluationInfoContain">
-                <div className="containerHeading">{this.props.title}</div>
+                <div className="containerHeading">
+                    <div className="row">
+                        <div className="col-xs-6">
+                            {this.props.title}
+                        </div>
+                        <div className="col-xs-6 text-right">
+                            <div className="container-fluid">
+                                <Link className="btn btn-primary" to={this.props.apipath + '/new'}>Opprett ny</Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="carEvaluationInfo container-fluid">
                     <div className="row-fluid carEvaluationContent">
                         <table className="table">

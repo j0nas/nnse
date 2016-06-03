@@ -20,6 +20,7 @@ mongoose.init('mongodb://127.0.0.1:27017/nnse');
 const entityManager = require('./routes/entityManager');
 entityManager.init(app, 'api');
 // entityManager.setupEntities('Mailbox', 'Tenant', 'Lease', 'Room', 'Invoice');
+// arr.map(entity => entityManager.setupEntities(entity));
 entityManager.setupEntities('Mailbox');
 entityManager.setupEntities('Tenant');
 entityManager.setupEntities('Lease');
