@@ -45,11 +45,12 @@ export default class EntityDetails extends React.Component {
     }
 
     render() {
-        return <span>
-            <StaticContentBox title={this.props.route.apipath} content={this.state.data}/>
-            <ContentBox title="Operasjoner">
-                <a className="btn btn-danger" onClick={() => this.deleteEntity()}>Slett</a>
-            </ContentBox>
-        </span>;
+        return (
+            <span>
+                <StaticContentBox title={this.props.route.apipath} content={this.state.data}/>
+                <ContentBox title="Operasjoner">
+                    <a className="btn btn-danger" onClick={() => this.deleteEntity()}>Slett</a>
+                </ContentBox>
+            </span>);
     }
 }

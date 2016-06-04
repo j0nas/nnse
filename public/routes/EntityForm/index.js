@@ -84,7 +84,7 @@ export default class EntityForm extends React.Component {
 
     createFormInput(label, fieldId) {
         return (
-            <span>
+            <span key={label + '_' + fieldId}>
                 <label>{label}</label>
                 <input type="text" id={fieldId} className="form-control"/>
                 <br/>
