@@ -55,10 +55,8 @@ export default class EntityForm extends React.Component {
                 break;
             case "/leases":
                 return {
-                    duration: {
-                        from: "Fra",
-                        to: "Til"
-                    }
+                    from: "_Fra",
+                    to: "_Til"
                 };
                 break;
             default:
@@ -83,10 +81,15 @@ export default class EntityForm extends React.Component {
     }
 
     createFormInput(label, fieldId) {
+        const dateInput = label[0] === "_";
+        if (dateInput) {
+            label = label.replace("_", "");
+        }
+
         return (
             <span key={label + '_' + fieldId}>
                 <label>{label}</label>
-                <input type="text" id={fieldId} className="form-control"/>
+                <input type={dateInput ? "date" : "text"} id={fieldId} className="form-control"/>
                 <br/>
             </span>
         );
