@@ -27,36 +27,75 @@ export default class EntityForm extends React.Component {
         switch (this.props.route.apipath) {
             case "/tenants":
                 return {
-                    name_first: "Fornavn",
-                    name_middle: "Mellomnavn",
-                    name_last: "Etternavn",
-                    email: "E-post",
-                    phone: "Telefon"
+                    name_first: {
+                        value: "Fornavn",
+                        type: "text"
+                    },
+                    name_middle: {
+                        value: "Mellomnavn",
+                        type: "text"
+                    },
+                    name_last: {
+                        value: "Etternavn",
+                        type: "text"
+                    },
+                    email: {
+                        value: "E-post",
+                        type: "email"
+                    },
+                    phone: {
+                        value: "Telefon",
+                        type: "tel"
+                    }
                     // _mailbox: "Postkasse" TODO
                 };
                 break;
             case "/rooms":
                 return {
-                    number: "Nummer",
-                    rent: "Leie"
+                    number: {
+                        value: "Nummer",
+                        type: "number"
+                    },
+                    rent: {
+                        value: "Leie",
+                        type: "number"
+                    }
                 };
                 break;
             case "/mailboxes":
                 return {
-                    number: "Nummer"
+                    number: {
+                        value: "Nummer",
+                        type: "number"
+                    }
                 };
                 break;
             case "/invoices":
                 return {
-                    amount: "Beløp",
-                    date: "Dato",
-                    comment: "Kommentar"
+                    amount: {
+                        value: "Beløp",
+                        type: "number"
+                    },
+                    date: {
+                        value: "Dato",
+                        type: "date"
+                    },
+                    comment: {
+                        value: "Kommentar",
+                        type: "text"
+                    }
                 };
                 break;
             case "/leases":
                 return {
-                    from: "_Fra",
-                    to: "_Til"
+                    from: {
+                        value: "Fra",
+                        type: "date"
+                    },
+                    to: {
+                        value: "Til",
+                        type: "date"
+                    }
                 };
                 break;
             default:
@@ -73,23 +112,19 @@ export default class EntityForm extends React.Component {
         return (
             <ContentBox>
                 <form id="entity-form" name="entity-form" enctype="application/json">
-                    {Object.keys(entityObject).map(field => this.createFormInput(entityObject[field], field))}
+                    {Object.keys(entityObject).map(field =>
+                        this.createFormInput(entityObject[field].value, field, entityObject[field].type))}
                 </form>
                 <a className="btn btn-success" onClick={() => this.createUser()}>Opprett</a>
             </ContentBox>
         );
     }
 
-    createFormInput(label, fieldId) {
-        const dateInput = label[0] === "_";
-        if (dateInput) {
-            label = label.replace("_", "");
-        }
-
+    createFormInput(label, fieldId, inputType) {
         return (
             <span key={label + '_' + fieldId}>
                 <label>{label}</label>
-                <input type={dateInput ? "date" : "text"} id={fieldId} className="form-control"/>
+                <input type={inputType} id={fieldId} className="form-control"/>
                 <br/>
             </span>
         );
