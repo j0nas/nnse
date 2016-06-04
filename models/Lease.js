@@ -13,10 +13,8 @@ var leaseSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Mailbox'
     },
-    duration: {
-        from: Date,
-        to: Date
-    }
+    from: Date,
+    to: Date
 });
 
 module.exports = mongoose.model('Lease', leaseSchema);

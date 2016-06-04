@@ -1,6 +1,7 @@
 import React from "react";
 import ContentBox from "../components/ContentBox/ContentBox";
 import {browserHistory} from "react-router";
+import FormEntities from "./FormEntities";
 
 export default class EntityForm extends React.Component {
     createUser() {
@@ -18,56 +19,13 @@ export default class EntityForm extends React.Component {
 
     getFormData() {
         const formBody = {};
-        const entityObject = this.getEntityObject();
+        const entityObject = FormEntities.getEntityObject(this.props.route.apipath);
         Object.keys(entityObject).map(field => formBody[field] = document.getElementById(field).value);
         return formBody;
     }
-
-    getEntityObject() {
-        switch (this.props.route.apipath) {
-            case "/tenants":
-                return {
-                    name_first: "Fornavn",
-                    name_middle: "Mellomnavn",
-                    name_last: "Etternavn",
-                    email: "E-post",
-                    phone: "Telefon"
-                    // _mailbox: "Postkasse" TODO
-                };
-                break;
-            case "/rooms":
-                return {
-                    number: "Nummer",
-                    rent: "Leie"
-                };
-                break;
-            case "/mailboxes":
-                return {
-                    number: "Nummer"
-                };
-                break;
-            case "/invoices":
-                return {
-                    amount: "Beløp",
-                    date: "Dato",
-                    comment: "Kommentar"
-                };
-                break;
-            case "/leases":
-                return {
-                    duration: {
-                        from: "Fra",
-                        to: "Til"
-                    }
-                };
-                break;
-            default:
-                return null;
-        }
-    }
-
+    
     render() {
-        const entityObject = this.getEntityObject();
+        const entityObject = FormEntities.getEntityObject(this.props.route.apipath);
         if (entityObject == null) {
             return <div></div>;
         }
@@ -75,18 +33,19 @@ export default class EntityForm extends React.Component {
         return (
             <ContentBox>
                 <form id="entity-form" name="entity-form" enctype="application/json">
-                    {Object.keys(entityObject).map(field => this.createFormInput(entityObject[field], field))}
+                    {Object.keys(entityObject).map(field =>
+                        this.createFormInput(entityObject[field].value, field, entityObject[field].type))}
                 </form>
                 <a className="btn btn-success" onClick={() => this.createUser()}>Opprett</a>
             </ContentBox>
         );
     }
 
-    createFormInput(label, fieldId) {
+    createFormInput(label, fieldId, inputType) {
         return (
             <span key={label + '_' + fieldId}>
                 <label>{label}</label>
-                <input type="text" id={fieldId} className="form-control"/>
+                <input type={inputType} id={fieldId} className="form-control"/>
                 <br/>
             </span>
         );
