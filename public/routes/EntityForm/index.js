@@ -35,6 +35,32 @@ export default class EntityForm extends React.Component {
                     // _mailbox: "Postkasse" TODO
                 };
                 break;
+            case "/rooms":
+                return {
+                    number: "Nummer",
+                    rent: "Leie"
+                };
+                break;
+            case "/mailboxes":
+                return {
+                    number: "Nummer"
+                };
+                break;
+            case "/invoices":
+                return {
+                    amount: "Beløp",
+                    date: "Dato",
+                    comment: "Kommentar"
+                };
+                break;
+            case "/leases":
+                return {
+                    duration: {
+                        from: "Fra",
+                        to: "Til"
+                    }
+                };
+                break;
             default:
                 return null;
         }
