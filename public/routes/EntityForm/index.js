@@ -1,6 +1,7 @@
 import React from "react";
 import ContentBox from "../components/ContentBox/ContentBox";
 import {browserHistory} from "react-router";
+import FormEntities from "./FormEntities";
 
 export default class EntityForm extends React.Component {
     createUser() {
@@ -18,93 +19,13 @@ export default class EntityForm extends React.Component {
 
     getFormData() {
         const formBody = {};
-        const entityObject = this.getEntityObject();
+        const entityObject = FormEntities.getEntityObject(this.props.route.apipath);
         Object.keys(entityObject).map(field => formBody[field] = document.getElementById(field).value);
         return formBody;
     }
-
-    getEntityObject() {
-        switch (this.props.route.apipath) {
-            case "/tenants":
-                return {
-                    name_first: {
-                        value: "Fornavn",
-                        type: "text"
-                    },
-                    name_middle: {
-                        value: "Mellomnavn",
-                        type: "text"
-                    },
-                    name_last: {
-                        value: "Etternavn",
-                        type: "text"
-                    },
-                    email: {
-                        value: "E-post",
-                        type: "email"
-                    },
-                    phone: {
-                        value: "Telefon",
-                        type: "tel"
-                    }
-                    // _mailbox: "Postkasse" TODO
-                };
-                break;
-            case "/rooms":
-                return {
-                    number: {
-                        value: "Nummer",
-                        type: "number"
-                    },
-                    rent: {
-                        value: "Leie",
-                        type: "number"
-                    }
-                };
-                break;
-            case "/mailboxes":
-                return {
-                    number: {
-                        value: "Nummer",
-                        type: "number"
-                    }
-                };
-                break;
-            case "/invoices":
-                return {
-                    amount: {
-                        value: "Beløp",
-                        type: "number"
-                    },
-                    date: {
-                        value: "Dato",
-                        type: "date"
-                    },
-                    comment: {
-                        value: "Kommentar",
-                        type: "text"
-                    }
-                };
-                break;
-            case "/leases":
-                return {
-                    from: {
-                        value: "Fra",
-                        type: "date"
-                    },
-                    to: {
-                        value: "Til",
-                        type: "date"
-                    }
-                };
-                break;
-            default:
-                return null;
-        }
-    }
-
+    
     render() {
-        const entityObject = this.getEntityObject();
+        const entityObject = FormEntities.getEntityObject(this.props.route.apipath);
         if (entityObject == null) {
             return <div></div>;
         }
