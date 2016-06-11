@@ -58,12 +58,7 @@ export default class EntityForm extends React.Component {
         if (entityObject[field].type === "entity_reference") {
             // TODO: extract to documentDidUpdate or something instead of timeOut
             setTimeout(() => this.fillSelectValues(field, entityObject[field].endpoint, entityObject[field].identifiers), 1000);
-            return (
-                <span key={entityObject[field].value + '_' + field}>
-                    <label htmlFor={field}>{entityObject[field].value}</label>
-                    <select id={field} className="form-control"/>
-                </span>
-            );
+            return this.createFormInput(entityObject[field].value, field, entityObject[field].type);
         }
 
         return this.createFormInput(entityObject[field].value, field, entityObject[field].type);
@@ -90,7 +85,9 @@ export default class EntityForm extends React.Component {
         return (
             <span key={label + '_' + fieldId}>
                 <label>{label}</label>
-                <input type={inputType} id={fieldId} className="form-control"/>
+                {inputType === "entity_reference" ?
+                    <select id={fieldId} className="form-control"/> :
+                    <input type={inputType} id={fieldId} className="form-control"/>}
                 <br/>
             </span>
         );

@@ -31,7 +31,7 @@ export default class EntityTable extends React.Component {
         }
 
         if (!this.filterTableValues(key)) {
-            return <td key={value}>{value}</td>;
+            return <td key={key + "_" + value}>{value}</td>;
         }
     }
 
