@@ -24,24 +24,44 @@ export default class EntityForm extends React.Component {
         return formBody;
     }
 
-    fillSelectValues(id, endpoint, identifier) {
+    fillSelectValues(id, endpoint, identifiers) {
         fetch("/api" + endpoint)
             .then(res => res.json())
             .then(res => {
                 const element = document.getElementById(id);
-                res.map((entity, i) => element.options[i] = new Option(entity[identifier], entity._id));
+                res.map((entity, i) => {
+                    const entityIdentifier = this.getEntityIdentifier(identifiers, entity);
+                    element.options[i] = new Option(entityIdentifier, entity._id);
+                });
             });
+    }
+
+    getEntityIdentifier(identifiers, entity) {
+        let identifiersString = "";
+        let added = false;
+        identifiers.map(identifier => {
+            if (entity[identifier]) {
+                if (added) {
+                    identifiersString += " ";
+                } else {
+                    added = true;
+                }
+
+                identifiersString += entity[identifier];
+            }
+        });
+
+        return identifiersString;
     }
 
     createFormContentMarkup(entityObject, field) {
         if (entityObject[field].type === "entity_reference") {
             // TODO: extract to documentDidUpdate or something instead of timeOut
-            setTimeout(() => this.fillSelectValues(field, entityObject[field].endpoint, entityObject[field].identifier), 2000);
+            setTimeout(() => this.fillSelectValues(field, entityObject[field].endpoint, entityObject[field].identifiers), 1000);
             return (
                 <span key={entityObject[field].value + '_' + field}>
                     <label htmlFor={field}>{entityObject[field].value}</label>
-                    <select id={field} className="form-control">
-                    </select>
+                    <select id={field} className="form-control"/>
                 </span>
             );
         }
@@ -51,7 +71,7 @@ export default class EntityForm extends React.Component {
 
     render() {
         const entityObject = FormEntities.getEntityObject(this.props.route.apipath);
-        if (entityObject == null) {
+        if (!entityObject) {
             return <div></div>;
         }
 
