@@ -77,6 +77,18 @@ export default class FormEntities {
                         type: "entity_reference",
                         endpoint: "/tenants",
                         identifiers: ["name_first", "name_middle", "name_last"]
+                    },
+                    _room: {
+                        value: "Rom",
+                        type: "entity_reference",
+                        endpoint: "/rooms",
+                        identifiers: ["number"]
+                    },
+                    _mailbox: {
+                        value: "Postboks",
+                        type: "entity_reference",
+                        endpoint: "/mailboxes",
+                        identifiers: ["number"]
                     }
                 };
                 break;
