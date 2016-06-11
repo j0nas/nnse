@@ -75,7 +75,8 @@ export default class FormEntities {
                     tenant: {
                         value: "Leietaker",
                         type: "entity_reference",
-                        endpoint: "/tenants"
+                        endpoint: "/tenants",
+                        identifier: "name_first"
                     },
                 };
                 break;

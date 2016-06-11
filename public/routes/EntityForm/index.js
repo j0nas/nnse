@@ -24,19 +24,19 @@ export default class EntityForm extends React.Component {
         return formBody;
     }
 
-    fillSelectValues(id, endpoint) {
+    fillSelectValues(id, endpoint, identifier) {
         fetch("/api" + endpoint)
             .then(res => res.json())
             .then(res => {
                 const element = document.getElementById(id);
-                res.map((tenant, i) => element.options[i] = new Option(tenant.name_first, tenant._id));
+                res.map((entity, i) => element.options[i] = new Option(entity[identifier], entity._id));
             });
     }
 
     createFormContentMarkup(entityObject, field) {
         if (entityObject[field].type === "entity_reference") {
             // TODO: extract to documentDidUpdate or something instead of timeOut
-            setTimeout(() => this.fillSelectValues(field, entityObject[field].endpoint), 2000);
+            setTimeout(() => this.fillSelectValues(field, entityObject[field].endpoint, entityObject[field].identifier), 2000);
             return (
                 <span key={entityObject[field].value + '_' + field}>
                     <label htmlFor={field}>{entityObject[field].value}</label>
