@@ -23,7 +23,32 @@ export default class EntityForm extends React.Component {
         Object.keys(entityObject).map(field => formBody[field] = document.getElementById(field).value);
         return formBody;
     }
-    
+
+    fillSelectValues(id, endpoint) {
+        fetch("/api" + endpoint)
+            .then(res => res.json())
+            .then(res => {
+                const element = document.getElementById(id);
+                res.map((tenant, i) => element.options[i] = new Option(tenant.name_first, tenant._id));
+            });
+    }
+
+    createFormContentMarkup(entityObject, field) {
+        if (entityObject[field].type === "entity_reference") {
+            // TODO: extract to documentDidUpdate or something instead of timeOut
+            setTimeout(() => this.fillSelectValues(field, entityObject[field].endpoint), 2000);
+            return (
+                <span key={entityObject[field].value + '_' + field}>
+                    <label htmlFor={field}>{entityObject[field].value}</label>
+                    <select id={field} className="form-control">
+                    </select>
+                </span>
+            );
+        }
+
+        return this.createFormInput(entityObject[field].value, field, entityObject[field].type);
+    }
+
     render() {
         const entityObject = FormEntities.getEntityObject(this.props.route.apipath);
         if (entityObject == null) {
@@ -33,9 +58,9 @@ export default class EntityForm extends React.Component {
         return (
             <ContentBox>
                 <form id="entity-form" name="entity-form" enctype="application/json">
-                    {Object.keys(entityObject).map(field =>
-                        this.createFormInput(entityObject[field].value, field, entityObject[field].type))}
+                    {Object.keys(entityObject).map(field => this.createFormContentMarkup(entityObject, field))}
                 </form>
+                <br/>
                 <a className="btn btn-success" onClick={() => this.createUser()}>Opprett</a>
             </ContentBox>
         );

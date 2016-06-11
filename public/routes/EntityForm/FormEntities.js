@@ -71,7 +71,12 @@ export default class FormEntities {
                     to: {
                         value: "Til",
                         type: "date"
-                    }
+                    },
+                    tenant: {
+                        value: "Leietaker",
+                        type: "entity_reference",
+                        endpoint: "/tenants"
+                    },
                 };
                 break;
             default:
