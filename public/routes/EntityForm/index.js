@@ -4,7 +4,7 @@ import {browserHistory} from "react-router";
 import FormEntities from "./FormEntities";
 
 export default class EntityForm extends React.Component {
-    createUser() {
+    createEntity() {
         const entityApiPath = '/api' + this.props.route.apipath;
         fetch(entityApiPath, {
             method: 'POST',
@@ -81,7 +81,7 @@ export default class EntityForm extends React.Component {
                     {Object.keys(entityObject).map(field => this.createFormContentMarkup(entityObject, field))}
                 </form>
                 <br/>
-                <a className="btn btn-success" onClick={() => this.createUser()}>Opprett</a>
+                <a className="btn btn-success" onClick={() => this.createEntity()}>Opprett</a>
             </ContentBox>
         );
     }
