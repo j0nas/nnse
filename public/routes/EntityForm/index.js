@@ -27,16 +27,27 @@ export default class EntityForm extends React.Component {
         return formBody;
     }
 
-    fillSelectValues(id, endpoint, identifiers) {
-        fetch("/api" + endpoint)
-            .then(res => res.json())
-            .then(res => {
-                const element = document.getElementById(id);
-                res.map((entity, i) => {
-                    const entityIdentifier = this.getEntityIdentifier(identifiers, entity);
-                    element.options[i] = new Option(entityIdentifier, entity._id);
+    fillSelectValues(selectElementId, endpoint, identifiers) {
+        // todo this will only work for leases? v
+        fetch("/api" + this.props.route.apipath).then(res => res.json()).then(currentRouteEntites => {
+
+            let optionIndex = 0;
+            fetch("/api" + endpoint)
+                .then(entities => entities.json())
+                .then(entities => {
+                    const element = document.getElementById(selectElementId);
+                    entities.map(entity => {
+                        if (currentRouteEntites.filter(e => e[selectElementId] === entity._id).length > 0) {
+                            return;
+                        }
+
+                        const entityIdentifier = this.getEntityIdentifier(identifiers, entity);
+                        element.options[optionIndex++] = new Option(entityIdentifier, entity._id);
+                    });
                 });
-            });
+
+
+        });
     }
 
     getEntityIdentifier(identifiers, entity) {
