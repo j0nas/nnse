@@ -59,8 +59,8 @@ export default class EntityForm extends React.Component {
 
     createFormContentMarkup(entityObject, field) {
         if (entityObject[field].type === "entity_reference") {
-            this.fillSelectWithEntityCallbacks.push(() => this.fillSelectValues(field, entityObject[field].endpoint, entityObject[field].identifiers));
-
+            this.fillSelectWithEntityCallbacks.push(() =>
+                this.fillSelectValues(field, entityObject[field].endpoint, entityObject[field].identifiers));
             return this.createFormInput(entityObject[field].value, field, entityObject[field].type);
         }
 
