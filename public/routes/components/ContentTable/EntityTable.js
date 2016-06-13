@@ -39,40 +39,40 @@ export default class EntityTable extends React.Component {
         return (
             <div className="carEvaluationInfoContain">
                 <div className="containerHeading">
-                    <div className="row">
-                        <div className="col-xs-6">
-                            {this.props.title}
-                        </div>
-                        <div className="col-xs-6 text-right">
-                            <div className="container-fluid">
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-xs-6">
+                                {this.props.title}
+                            </div>
+                            <div className="col-xs-6 text-right">
                                 <Link className="btn btn-primary" to={this.props.apipath + '/new'}>Opprett ny</Link>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="carEvaluationInfo container-fluid">
-                    <div className="row-fluid carEvaluationContent">
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                {this.props.entities[0] &&
-                                Object.keys(this.props.entities[0]).map(prop => this.getTableHeaders(prop))}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {this.props.entities.map(entity => this.getTableRow(entity))}
-                            </tbody>
-                        </table>
-                    </div>
+                <div className="carEvaluationInfo">
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            {this.props.entities[0] &&
+                            Object.keys(this.props.entities[0]).map(prop => this.getTableHeaders(prop))}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.props.entities.map(entity => this.getTableRow(entity))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         );
     }
 
     getTableRow(entity) {
-        return <tr key={entity._id}>
-            {Object.keys(entity).map(key => this.getTableContent(key, entity[key]))}
-        </tr>;
+        return (
+            <tr key={entity._id}>
+                {Object.keys(entity).map(key => this.getTableContent(key, entity[key]))}
+            </tr>
+        );
     }
 }
 

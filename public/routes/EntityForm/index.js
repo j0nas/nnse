@@ -28,9 +28,7 @@ export default class EntityForm extends React.Component {
     }
 
     fillSelectValues(selectElementId, endpoint, identifiers) {
-        // todo this will only work for leases? v
         fetch("/api" + this.props.route.apipath).then(res => res.json()).then(currentRouteEntites => {
-
             let optionIndex = 0;
             fetch("/api" + endpoint)
                 .then(entities => entities.json())
