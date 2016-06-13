@@ -4,13 +4,16 @@ import {browserHistory} from "react-router";
 import FormEntities from "./FormEntities";
 
 export default class EntityForm extends React.Component {
+    constructor() {
+        super();
+        this.fillSelectWithEntityCallbacks = [];
+    }
+
     createEntity() {
         const entityApiPath = '/api' + this.props.route.apipath;
         fetch(entityApiPath, {
             method: 'POST',
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            }),
+            headers: new Headers({'Content-Type': 'application/json'}),
             body: JSON.stringify(this.getFormData())
         })
             .then(browserHistory.push(this.props.route.apipath))
@@ -56,12 +59,16 @@ export default class EntityForm extends React.Component {
 
     createFormContentMarkup(entityObject, field) {
         if (entityObject[field].type === "entity_reference") {
-            // TODO: extract to documentDidUpdate or something instead of timeOut
-            setTimeout(() => this.fillSelectValues(field, entityObject[field].endpoint, entityObject[field].identifiers), 1000);
+            this.fillSelectWithEntityCallbacks.push(() => this.fillSelectValues(field, entityObject[field].endpoint, entityObject[field].identifiers));
+
             return this.createFormInput(entityObject[field].value, field, entityObject[field].type);
         }
 
         return this.createFormInput(entityObject[field].value, field, entityObject[field].type);
+    }
+
+    componentDidMount() {
+        this.fillSelectWithEntityCallbacks.map(func => func());
     }
 
     render() {
