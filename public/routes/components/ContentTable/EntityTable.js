@@ -48,8 +48,6 @@ export default class EntityTable extends React.Component {
         }
     }
 
-    // TODO populate when fetching!
-
     // TODO make date formatting less hackish -- look at input type?
     formatDate(timestamp) {
         if (!timestamp) {
@@ -64,27 +62,24 @@ export default class EntityTable extends React.Component {
     formatEntities(entities) {
         const entityObject = FormEntities.getEntityObject(this.props.apipath);
         const result = [];
-        let index = 0;
 
-        entities.map(entity => {
+        entities.map((entity, index) => {
             result[index] = {_id: entity._id};
 
             Object.keys(entityObject).map(key => {
-                result[index][key] = entityObject[key].type === "date" ?
-                    this.formatDate(entity[key]) : entity[key];
-
-                // if (entityObject[key].type === "entity_reference") {
-                //     fetch("/api" + entityObject[key].endpoint)
-                //         .then(res => res.json())
-                //         .then(res => res.map(fetchedEntity => {
-                //             if (fetchedEntity._id === entity._id) {
-                //                 // result[index][key] =
-                //             }
-                //         }))
-                // }
+                if (entityObject[key].type === "date") {
+                    result[index][key] = this.formatDate(entity[key]);
+                } else if (entityObject[key].identifiers) {
+                    result[index][key] = "";
+                    entityObject[key].identifiers.map(identifier => {
+                        if (entity[key]) {
+                            result[index][key] += entity[key][identifier] + " ";
+                        }
+                    });
+                } else {
+                    result[index][key] = entity[key];
+                }
             });
-
-            index++;
         });
 
         return result;
