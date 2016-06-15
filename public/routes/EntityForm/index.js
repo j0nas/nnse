@@ -28,22 +28,25 @@ export default class EntityForm extends React.Component {
     }
 
     fillSelectValues(selectElementId, endpoint, identifiers) {
-        fetch("/api" + this.props.route.apipath).then(res => res.json()).then(currentRouteEntites => {
-            let optionIndex = 0;
-            fetch("/api" + endpoint)
-                .then(entities => entities.json())
-                .then(entities => {
-                    const element = document.getElementById(selectElementId);
-                    entities.map(entity => {
-                        if (currentRouteEntites.filter(e => e[selectElementId] === entity._id).length > 0) {
-                            return;
-                        }
+        fetch("/api" + this.props.route.apipath)
+            .then(res => res.json())
+            .then(currentRouteEntites => {
+                let optionIndex = 0;
+                fetch("/api" + endpoint)
+                    .then(entities => entities.json())
+                    .then(entities => {
+                        const element = document.getElementById(selectElementId);
+                        entities.map(entity => {
+                            if (currentRouteEntites.filter(currentEntity =>
+                                currentEntity[selectElementId]._id === entity._id).length > 0) {
+                                return;
+                            }
 
-                        const entityIdentifier = this.getEntityIdentifier(identifiers, entity);
-                        element.options[optionIndex++] = new Option(entityIdentifier, entity._id);
+                            const entityIdentifier = this.getEntityIdentifier(identifiers, entity);
+                            element.options[optionIndex++] = new Option(entityIdentifier, entity._id);
+                        });
                     });
-                });
-        });
+            });
     }
 
     getEntityIdentifier(identifiers, entity) {
