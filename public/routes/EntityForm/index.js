@@ -43,8 +43,6 @@ export default class EntityForm extends React.Component {
                         element.options[optionIndex++] = new Option(entityIdentifier, entity._id);
                     });
                 });
-
-
         });
     }
 

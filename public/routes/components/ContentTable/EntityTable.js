@@ -3,16 +3,6 @@ import {Link} from "react-router";
 import FormEntities from "../../EntityForm/FormEntities";
 
 export default class EntityTable extends React.Component {
-    filterTableValues(val) {
-        const filter = {
-            _id: false,
-            __v: true
-        };
-
-        return filter[val];
-    }
-
-
     getTableHeader() {
         const entityObject = FormEntities.getEntityObject(this.props.apipath);
         return (
@@ -43,9 +33,7 @@ export default class EntityTable extends React.Component {
             );
         }
 
-        if (!this.filterTableValues(key)) {
-            return <td key={key + "_" + value}>{value}</td>;
-        }
+        return <td key={key + "_" + value}>{value}</td>;
     }
 
     // TODO make date formatting less hackish -- look at input type?
@@ -92,7 +80,6 @@ export default class EntityTable extends React.Component {
 
         return result;
     }
-
 
     getTableContents() {
         const formattedEntities = this.formatEntities(this.props.entities);
