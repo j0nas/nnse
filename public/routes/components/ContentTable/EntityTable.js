@@ -76,6 +76,14 @@ export default class EntityTable extends React.Component {
                             result[index][key] += entity[key][identifier] + " ";
                         }
                     });
+
+                    if (entity[key]) {
+                        result[index][key] = (
+                            <Link to={entityObject[key].endpoint + "/" + entity[key]._id}>
+                                {result[index][key]}
+                            </Link>
+                        );
+                    }
                 } else {
                     result[index][key] = entity[key];
                 }
