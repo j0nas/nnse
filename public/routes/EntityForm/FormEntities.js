@@ -23,7 +23,6 @@ export default class FormEntities {
                     value: "Telefon",
                     type: "tel"
                 }
-                    // _mailbox: "Postkasse" TODO
             };
         case "/rooms":
             return {

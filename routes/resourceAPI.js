@@ -1,8 +1,14 @@
 module.exports = function(model) {
     var router = require('express').Router(); // eslint-disable-line new-cap
 
+    // router.get('/', (req, res, next) =>
+    //     model.find((err, items) => err ? next(err) : res.json(items)));
     router.get('/', (req, res, next) =>
-        model.find((err, items) => err ? next(err) : res.json(items)));
+        model.find()
+            .populate('_tenant')
+            .populate('_room')
+            .populate('_mailbox')
+            .exec((err, items) => err ? next(err) : res.json(items)));
 
     router.post('/', (req, res, next) =>
         model.create(req.body, (err, post) => err ? next(err) : res.json(post)));
