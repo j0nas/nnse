@@ -31,7 +31,7 @@ export default class EntityTable extends React.Component {
         this.handleArrowCharDisplaying(table.tHead.rows[0].cells, column, reverse);
 
         let tableRow = Array.prototype.slice.call(tableBody.rows, 0);
-        reverse = -(+reverse || -1);
+        reverse = -(Number(reverse) || -1);
         tableRow = tableRow.sort((a, b) =>
             reverse * (a.cells[column].textContent.trim().localeCompare(b.cells[column].textContent.trim()))
         );
@@ -42,7 +42,8 @@ export default class EntityTable extends React.Component {
     }
 
     makeSortable(table) {
-        var tableHead = table.tHead, i;
+        let tableHead = table.tHead;
+        let i;
         tableHead && (tableHead = tableHead.rows[0]) && (tableHead = tableHead.cells);
         if (tableHead) {
             i = tableHead.length;
@@ -52,7 +53,7 @@ export default class EntityTable extends React.Component {
 
         const ref = this;
         while (--i >= 0) {
-            (function (i) {
+            (function(i) {
                 let dir = 1;
                 tableHead[i].addEventListener('click', () => ref.sortTable(table, i, (dir = 1 - dir)));
             }(i));
