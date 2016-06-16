@@ -10,6 +10,7 @@ export default class EntityTable extends React.Component {
     constructor() {
         super();
         this.lastCellSorted = -1;
+        this.prevPath = "none";
     }
 
     handleArrowCharDisplaying(cells, column, reverse) {
@@ -142,9 +143,15 @@ export default class EntityTable extends React.Component {
         return <tbody>{formattedEntities.map(entity => this.getTableRow(entity))}</tbody>;
     }
 
-    componentDidMount() {
-        const entityTable = document.getElementById("entityTable");
-        this.makeSortable(entityTable);
+    componentDidUpdate(prevProps) {
+        if (!this.prevPath) {
+            this.prevPath = prevProps.apipath;
+        } else {
+            this.prevPath = null;
+            this.lastCellSorted = -1;
+            const entityTable = document.getElementById("entityTable");
+            this.makeSortable(entityTable);
+        }
     }
 
     render() {
