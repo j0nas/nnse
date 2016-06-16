@@ -8,9 +8,12 @@ export default class EntityTable extends React.Component {
         return (
             <thead>
             <tr>
-                <th/>
-                {Object.keys(entityObject).map(key =>
-                    <th key={entityObject[key].value}>{entityObject[key].value}</th>)}
+                <th data-sortable="true" data-field="_id">Id</th>
+                {Object.keys(entityObject).map(key => (
+                    <th key={entityObject[key].value} data-sortable="true" data-field={key}>
+                        {entityObject[key].value}
+                    </th>
+                ))}
             </tr>
             </thead>
         );
