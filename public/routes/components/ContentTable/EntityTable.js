@@ -3,17 +3,50 @@ import {Link} from "react-router";
 import FormEntities from "../../EntityForm/FormEntities";
 
 export default class EntityTable extends React.Component {
+
+    // TODO replace forEach with map for ESLint compliance
+    // TODO extract rendering logic from content parsing logic, split into separate classes
+
+    // http://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript
+    sortTable(table, col, reverse) {
+        const tableBody = table.tBodies[0];
+        let tableRow = Array.prototype.slice.call(tableBody.rows, 0);
+
+        reverse = -(+reverse || -1);
+        tableRow = tableRow.sort((a, b) =>
+            reverse * (a.cells[col].textContent.trim().localeCompare(b.cells[col].textContent.trim()))
+        );
+
+        for (let i = 0; i < tableRow.length; ++i) {
+            tableBody.appendChild(tableRow[i]);
+        }
+    }
+
+    makeSortable(table) {
+        var tableHead = table.tHead, i;
+        tableHead && (tableHead = tableHead.rows[0]) && (tableHead = tableHead.cells);
+        if (tableHead) {
+            i = tableHead.length;
+        } else {
+            return;
+        }
+
+        const ref = this;
+        while (--i >= 0) {
+            (function (i) {
+                let dir = 1;
+                tableHead[i].addEventListener('click', () => ref.sortTable(table, i, (dir = 1 - dir)));
+            }(i));
+        }
+    }
+
     getTableHeader() {
         const entityObject = FormEntities.getEntityObject(this.props.apipath);
         return (
             <thead>
             <tr>
-                <th data-sortable="true" data-field="_id">Id</th>
-                {Object.keys(entityObject).map(key => (
-                    <th key={entityObject[key].value} data-sortable="true" data-field={key}>
-                        {entityObject[key].value}
-                    </th>
-                ))}
+                <th>Id</th>
+                {Object.keys(entityObject).map(key => <th key={entityObject[key].value}>{entityObject[key].value}</th>)}
             </tr>
             </thead>
         );
@@ -89,6 +122,11 @@ export default class EntityTable extends React.Component {
         return <tbody>{formattedEntities.map(entity => this.getTableRow(entity))}</tbody>;
     }
 
+    componentDidMount() {
+        const entityTable = document.getElementById("entityTable");
+        this.makeSortable(entityTable);
+    }
+
     render() {
         return (
             <div className="carEvaluationInfoContain">
@@ -105,7 +143,7 @@ export default class EntityTable extends React.Component {
                     </div>
                 </div>
                 <div className="carEvaluationInfo">
-                    <table className="table">
+                    <table className="table" id="entityTable">
                         {this.getTableHeader()}
                         {this.getTableContents()}
                     </table>
