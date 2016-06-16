@@ -7,14 +7,33 @@ export default class EntityTable extends React.Component {
     // TODO replace forEach with map for ESLint compliance
     // TODO extract rendering logic from content parsing logic, split into separate classes
 
-    // http://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript
-    sortTable(table, col, reverse) {
-        const tableBody = table.tBodies[0];
-        let tableRow = Array.prototype.slice.call(tableBody.rows, 0);
+    constructor() {
+        super();
+        this.lastCellSorted = -1;
+    }
 
+    handleArrowCharDisplaying(cells, column, reverse) {
+        if (this.lastCellSorted !== -1) {
+            const cell = cells[this.lastCellSorted];
+            cell.textContent = cell.textContent.slice(0, -2);
+        }
+
+        const downArrow = " \u2193";
+        const upArrow = " \u2191";
+        cells[column].textContent += reverse ? downArrow : upArrow;
+        this.lastCellSorted = column;
+    }
+
+    // http://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript
+    sortTable(table, column, reverse) {
+        const tableBody = table.tBodies[0];
+
+        this.handleArrowCharDisplaying(table.tHead.rows[0].cells, column, reverse);
+
+        let tableRow = Array.prototype.slice.call(tableBody.rows, 0);
         reverse = -(+reverse || -1);
         tableRow = tableRow.sort((a, b) =>
-            reverse * (a.cells[col].textContent.trim().localeCompare(b.cells[col].textContent.trim()))
+            reverse * (a.cells[column].textContent.trim().localeCompare(b.cells[column].textContent.trim()))
         );
 
         for (let i = 0; i < tableRow.length; ++i) {
