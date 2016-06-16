@@ -3,14 +3,71 @@ import {Link} from "react-router";
 import FormEntities from "../../EntityForm/FormEntities";
 
 export default class EntityTable extends React.Component {
+
+    // TODO replace forEach with map for ESLint compliance
+    // TODO extract rendering logic from content parsing logic, split into separate classes
+
+    constructor() {
+        super();
+        this.lastCellSorted = -1;
+        this.prevPath = "none";
+    }
+
+    handleArrowCharDisplaying(cells, column, reverse) {
+        if (this.lastCellSorted !== -1) {
+            const cell = cells[this.lastCellSorted];
+            cell.textContent = cell.textContent.slice(0, -2);
+        }
+
+        const downArrow = " \u2193";
+        const upArrow = " \u2191";
+        cells[column].textContent += reverse ? downArrow : upArrow;
+        this.lastCellSorted = column;
+    }
+
+    // http://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript
+    sortTable(table, column, reverse) {
+        const tableBody = table.tBodies[0];
+
+        this.handleArrowCharDisplaying(table.tHead.rows[0].cells, column, reverse);
+
+        let tableRow = Array.prototype.slice.call(tableBody.rows, 0);
+        reverse = -(Number(reverse) || -1);
+        tableRow = tableRow.sort((a, b) =>
+            reverse * (a.cells[column].textContent.trim().localeCompare(b.cells[column].textContent.trim()))
+        );
+
+        for (let i = 0; i < tableRow.length; ++i) {
+            tableBody.appendChild(tableRow[i]);
+        }
+    }
+
+    makeSortable(table) {
+        let tableHead = table.tHead;
+        let i;
+        tableHead && (tableHead = tableHead.rows[0]) && (tableHead = tableHead.cells);
+        if (tableHead) {
+            i = tableHead.length;
+        } else {
+            return;
+        }
+
+        const ref = this;
+        while (--i >= 0) {
+            (function(i) {
+                let dir = 1;
+                tableHead[i].addEventListener('click', () => ref.sortTable(table, i, (dir = 1 - dir)));
+            }(i));
+        }
+    }
+
     getTableHeader() {
         const entityObject = FormEntities.getEntityObject(this.props.apipath);
         return (
             <thead>
             <tr>
-                <th/>
-                {Object.keys(entityObject).map(key =>
-                    <th key={entityObject[key].value}>{entityObject[key].value}</th>)}
+                <th>Id</th>
+                {Object.keys(entityObject).map(key => <th key={entityObject[key].value}>{entityObject[key].value}</th>)}
             </tr>
             </thead>
         );
@@ -86,6 +143,17 @@ export default class EntityTable extends React.Component {
         return <tbody>{formattedEntities.map(entity => this.getTableRow(entity))}</tbody>;
     }
 
+    componentDidUpdate(prevProps) {
+        if (!this.prevPath) {
+            this.prevPath = prevProps.apipath;
+        } else {
+            this.prevPath = null;
+            this.lastCellSorted = -1;
+            const entityTable = document.getElementById("entityTable");
+            this.makeSortable(entityTable);
+        }
+    }
+
     render() {
         return (
             <div className="carEvaluationInfoContain">
@@ -102,7 +170,7 @@ export default class EntityTable extends React.Component {
                     </div>
                 </div>
                 <div className="carEvaluationInfo">
-                    <table className="table">
+                    <table className="table" id="entityTable">
                         {this.getTableHeader()}
                         {this.getTableContents()}
                     </table>

@@ -6,7 +6,7 @@ import '../../../css/main.css';
 import '../../../css/carEvaluation.css';
 import '../../../css/style.css';
 
-export default class extends React.Component {
+export default class Appcontainer extends React.Component {
     render() {
         return (
             <div>
