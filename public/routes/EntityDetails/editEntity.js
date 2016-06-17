@@ -45,7 +45,7 @@ export default class EntityDetails extends React.Component {
         return (
             <span>
                 <StaticContentBox title={this.props.route.apipath} content={this.state.data}/>
-                <ContentBox title="Operasjoner">
+                <ContentBox title="REDIGER ENTITET">
                     <a className="btn btn-primary" onClick={() =>
                     browserHistory.push(window.location.pathname + '/edit')}>Endre</a>
                     &nbsp;
