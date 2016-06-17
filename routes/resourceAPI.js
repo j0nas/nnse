@@ -1,8 +1,6 @@
 module.exports = function(model) {
     var router = require('express').Router(); // eslint-disable-line new-cap
 
-    // router.get('/', (req, res, next) =>
-    //     model.find((err, items) => err ? next(err) : res.json(items)));
     router.get('/', (req, res, next) =>
         model.find()
             .populate('_tenant')

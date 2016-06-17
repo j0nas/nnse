@@ -23,7 +23,9 @@ export default class EntityForm extends React.Component {
     getFormData() {
         const formBody = {};
         const entityObject = FormEntities.getEntityObject(this.props.route.apipath);
-        Object.keys(entityObject).map(field => formBody[field] = document.getElementById(field).value);
+        Object.keys(entityObject).forEach(field => {
+            formBody[field] = document.getElementById(field).value;
+        });
         return formBody;
     }
 
@@ -36,7 +38,7 @@ export default class EntityForm extends React.Component {
                     .then(entities => entities.json())
                     .then(entities => {
                         const element = document.getElementById(selectElementId);
-                        entities.map(entity => {
+                        entities.forEach(entity => {
                             if (currentRouteEntites.filter(currentEntity =>
                                 currentEntity[selectElementId]._id === entity._id).length > 0) {
                                 return;
@@ -52,7 +54,7 @@ export default class EntityForm extends React.Component {
     getEntityIdentifier(identifiers, entity) {
         let identifiersString = "";
         let added = false;
-        identifiers.map(identifier => {
+        identifiers.forEach(identifier => {
             if (entity[identifier]) {
                 if (added) {
                     identifiersString += " ";
