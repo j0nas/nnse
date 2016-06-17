@@ -14,15 +14,14 @@ export default class EntityDetails extends React.Component {
     }
 
     deleteEntity() {
-        sweetAlert(
-            {
-                title: "Slette entitet?",
-                text: "Denne handlingen kan ikke reverseres",
-                type: "warning",
-                confirmButtonColor: "#DD6B55",
-                showCancelButton: true,
-                cancelButtonText: "Avbryt"
-            },
+        sweetAlert({
+            title: "Slette entitet?",
+            text: "Denne handlingen kan ikke reverseres",
+            type: "warning",
+            confirmButtonColor: "#DD6B55",
+            showCancelButton: true,
+            cancelButtonText: "Avbryt"
+        },
             submit => {
                 if (submit) {
                     const entityApiPath = '/api' + this.props.route.apipath + '/' + this.props.params.id;
@@ -34,14 +33,10 @@ export default class EntityDetails extends React.Component {
             });
     }
 
-    update(pathSuffix) {
-        fetch('/api' + this.props.route.apipath + '/' + pathSuffix)
+    componentDidMount() {
+        fetch('/api' + this.props.route.apipath + '/' + this.props.params.id)
             .then(data => data.json())
             .then(entities => this.setState({data: entities}));
-    }
-
-    componentDidMount() {
-        this.update(this.props.params.id);
     }
 
     render() {
@@ -49,6 +44,8 @@ export default class EntityDetails extends React.Component {
             <span>
                 <StaticContentBox title={this.props.route.apipath} content={this.state.data}/>
                 <ContentBox title="Operasjoner">
+                    <a className="btn btn-primary" onClick={() => browserHistory.push('edit')}>Endre</a>
+                    &nbsp;
                     <a className="btn btn-danger" onClick={() => this.deleteEntity()}>Slett</a>
                 </ContentBox>
             </span>);
