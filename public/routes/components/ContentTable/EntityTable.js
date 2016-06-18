@@ -92,9 +92,8 @@ export default class EntityTable extends React.Component {
             return;
         }
 
-        const stamp = timestamp.split("T")[0];
-        const split = stamp.split("-");
-        return `${split[2]}.${split[1]}.${split[0]}`;
+        const date = new Date(timestamp);
+        return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
     }
 
     formatEntities(entities) {

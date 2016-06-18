@@ -11,10 +11,13 @@ export default class EntityForm extends React.Component {
         this.fillSelectWithEntityCallbacks = [];
     }
 
-    createEntity() {
-        const entityApiPath = '/api' + this.props.route.apipath;
+    persistEntity() {
+        const entityIdIfEditing = this.editing ? "/" + this.props.entity._id : "";
+        const entityApiPath = '/api' + this.props.route.apipath + entityIdIfEditing;
+        const method = this.editing ? 'PUT' : 'POST';
+
         fetch(entityApiPath, {
-            method: 'POST',
+            method: method,
             headers: new Headers({'Content-Type': 'application/json'}),
             body: JSON.stringify(this.getFormData())
         })
@@ -36,18 +39,25 @@ export default class EntityForm extends React.Component {
             .then(res => res.json())
             .then(currentRouteEntities => {
                 let optionIndex = 0;
+
                 fetch("/api" + endpoint)
                     .then(entities => entities.json())
                     .then(entities => {
                         const selectElement = document.getElementById(selectElementId);
                         entities.forEach(entity => {
-                            if (currentRouteEntities.filter(currentEntity =>
-                                currentEntity[selectElementId]._id === entity._id).length > 0) {
-                                return;
+                            const belongsToEntityBeingEdited =
+                                this.editing && (entity._id === this.props.entity[selectElementId]);
+                            if (!this.editing || !belongsToEntityBeingEdited) {
+                                if (currentRouteEntities.filter(currentEntity => currentEntity[selectElementId]._id === entity._id).length > 0) {
+                                    return;
+                                }
                             }
 
                             const entityIdentifier = this.getEntityIdentifierString(identifiers, entity);
                             selectElement.options[optionIndex++] = new Option(entityIdentifier, entity._id);
+                            if (belongsToEntityBeingEdited) {
+                                selectElement.options[optionIndex - 1].selected = true;
+                            }
                         });
                     });
             });
@@ -83,7 +93,7 @@ export default class EntityForm extends React.Component {
     formatDate(date) {
         const date2 = new Date(date);
         const day = (date2.getDate() > 9 ? "" : "0") + (date2.getDate());
-        const month = (date2.getMonth() > 9 ? "" : "0") + (date2.getMonth() + 1);
+        const month = (date2.getMonth() > 8 ? "" : "0") + (date2.getMonth() + 1);
 
         return `${date2.getFullYear()}-${month}-${day}`;
     }
@@ -119,13 +129,14 @@ export default class EntityForm extends React.Component {
             return <div></div>;
         }
 
+        const btnLabel = this.editing ? "Oppdater" : "Opprett";
         return (
             <ContentBox>
                 <form id="entity-form" name="entity-form" enctype="application/json">
                     {Object.keys(entityObject).map(field => this.createFormContentMarkup(entityObject, field))}
                 </form>
                 <br/>
-                <a className="btn btn-success" onClick={() => this.createEntity()}>Opprett</a>
+                <a className="btn btn-success" onClick={() => this.persistEntity()}>{btnLabel}</a>
             </ContentBox>
         );
     }
