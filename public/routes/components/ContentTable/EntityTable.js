@@ -55,7 +55,7 @@ export default class EntityTable extends React.Component {
         }
     }
 
-    getTableHeader() {
+    createTableHeader() {
         const entityObject = FormEntities.getEntityObject(this.props.apipath);
         return (
             <thead>
@@ -67,7 +67,7 @@ export default class EntityTable extends React.Component {
         );
     }
 
-    getTableRow(entity) {
+    createTableRow(entity) {
         return (
             <tr key={entity._id}>
                 {Object.keys(entity).map(key => this.getTableContent(key, entity[key], entity))}
@@ -132,7 +132,7 @@ export default class EntityTable extends React.Component {
 
     getTableContents() {
         const formattedEntities = this.formatEntities(this.props.entities);
-        return <tbody>{formattedEntities.map(entity => this.getTableRow(entity))}</tbody>;
+        return <tbody>{formattedEntities.map(entity => this.createTableRow(entity))}</tbody>;
     }
 
     componentDidUpdate(prevProps) {
@@ -206,7 +206,7 @@ export default class EntityTable extends React.Component {
                 </div>
                 <div className="carEvaluationInfo">
                     <table className="table" id="entityTable">
-                        {this.getTableHeader()}
+                        {this.createTableHeader()}
                         {this.getTableContents()}
                     </table>
                 </div>
