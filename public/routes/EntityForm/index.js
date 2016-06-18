@@ -4,8 +4,10 @@ import {browserHistory} from "react-router";
 import FormEntities from "./FormEntities";
 
 export default class EntityForm extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+
+        this.editing = props.entity !== undefined;
         this.fillSelectWithEntityCallbacks = [];
     }
 
@@ -32,26 +34,26 @@ export default class EntityForm extends React.Component {
     fillSelectValues(selectElementId, endpoint, identifiers) {
         fetch("/api" + this.props.route.apipath)
             .then(res => res.json())
-            .then(currentRouteEntites => {
+            .then(currentRouteEntities => {
                 let optionIndex = 0;
                 fetch("/api" + endpoint)
                     .then(entities => entities.json())
                     .then(entities => {
-                        const element = document.getElementById(selectElementId);
+                        const selectElement = document.getElementById(selectElementId);
                         entities.forEach(entity => {
-                            if (currentRouteEntites.filter(currentEntity =>
+                            if (currentRouteEntities.filter(currentEntity =>
                                 currentEntity[selectElementId]._id === entity._id).length > 0) {
                                 return;
                             }
 
-                            const entityIdentifier = this.getEntityIdentifier(identifiers, entity);
-                            element.options[optionIndex++] = new Option(entityIdentifier, entity._id);
+                            const entityIdentifier = this.getEntityIdentifierString(identifiers, entity);
+                            selectElement.options[optionIndex++] = new Option(entityIdentifier, entity._id);
                         });
                     });
             });
     }
 
-    getEntityIdentifier(identifiers, entity) {
+    getEntityIdentifierString(identifiers, entity) {
         let identifiersString = "";
         let added = false;
         identifiers.forEach(identifier => {
@@ -73,14 +75,42 @@ export default class EntityForm extends React.Component {
         if (entityObject[field].type === "entity_reference") {
             this.fillSelectWithEntityCallbacks.push(() =>
                 this.fillSelectValues(field, entityObject[field].endpoint, entityObject[field].identifiers));
-            return this.createFormInput(entityObject[field].value, field, entityObject[field].type);
         }
 
         return this.createFormInput(entityObject[field].value, field, entityObject[field].type);
     }
 
+    formatDate(date) {
+        const date2 = new Date(date);
+        const day = (date2.getDate() > 9 ? "" : "0") + (date2.getDate());
+        const month = (date2.getMonth() > 9 ? "" : "0") + (date2.getMonth() + 1);
+
+        return `${date2.getFullYear()}-${month}-${day}`;
+    }
+
+    createFormInput(label, fieldId, inputType) {
+        let defaultValue = null;
+        if (this.editing) {
+            defaultValue = this.props.entity[fieldId];
+
+            if (inputType === "date") {
+                defaultValue = this.formatDate(defaultValue);
+            }
+        }
+
+        return (
+            <span key={label + '_' + fieldId}>
+                <label>{label}</label>
+                {inputType === "entity_reference" ?
+                    <select id={fieldId} className="form-control"/> :
+                    <input type={inputType} id={fieldId} className="form-control" defaultValue={defaultValue}/>}
+                <br/>
+            </span>
+        );
+    }
+
     componentDidMount() {
-        this.fillSelectWithEntityCallbacks.map(func => func());
+        this.fillSelectWithEntityCallbacks.forEach(func => func());
     }
 
     render() {
@@ -97,18 +127,6 @@ export default class EntityForm extends React.Component {
                 <br/>
                 <a className="btn btn-success" onClick={() => this.createEntity()}>Opprett</a>
             </ContentBox>
-        );
-    }
-
-    createFormInput(label, fieldId, inputType) {
-        return (
-            <span key={label + '_' + fieldId}>
-                <label>{label}</label>
-                {inputType === "entity_reference" ?
-                    <select id={fieldId} className="form-control"/> :
-                    <input type={inputType} id={fieldId} className="form-control"/>}
-                <br/>
-            </span>
         );
     }
 }

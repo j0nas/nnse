@@ -4,12 +4,14 @@ import StaticContentBox from "../components/ContentBox/StaticContentBox";
 import sweetAlert from "sweetalert";
 import "sweetalert/dist/sweetalert.css";
 import {browserHistory} from "react-router";
+import EntityForm from "../EntityForm";
 
 export default class EntityDetails extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: {}
+            data: {},
+            editing: false
         };
     }
 
@@ -38,18 +40,25 @@ export default class EntityDetails extends React.Component {
     componentDidMount() {
         fetch('/api' + this.props.route.apipath + '/' + this.props.params.id)
             .then(data => data.json())
-            .then(entities => this.setState({data: entities}));
+            .then(entity => this.setState({data: entity}));
     }
 
     render() {
+        const details = <StaticContentBox title={this.props.route.apipath} content={this.state.data}/>;
+        const entityForm = <EntityForm entity={this.state.data} route={{"apipath": this.props.route.apipath}}/>;
+
+        //<a className="btn btn-primary" onClick={() => browserHistory.push(window.location.pathname + '/edit')}>Endre</a>
+        const editBtn = <a className="btn btn-primary" onClick={() => this.setState({editing: true})}>Endre</a>;
+        const cancelEditBtn = <a className="btn btn-danger" onClick={() => this.setState({editing: false})}>Avbryt</a>;
+        const deleteButton = <a className="btn btn-danger" onClick={() => this.deleteEntity()}>Slett</a>;
+
         return (
             <span>
-                <StaticContentBox title={this.props.route.apipath} content={this.state.data}/>
+                {this.state.editing ? entityForm : details}
                 <ContentBox title="Operasjoner">
-                    <a className="btn btn-primary" onClick={() =>
-                    browserHistory.push(window.location.pathname + '/edit')}>Endre</a>
+                    {this.state.editing ? cancelEditBtn : editBtn}
                     &nbsp;
-                    <a className="btn btn-danger" onClick={() => this.deleteEntity()}>Slett</a>
+                    {!this.state.editing && deleteButton}
                 </ContentBox>
             </span>);
     }
