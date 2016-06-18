@@ -48,7 +48,8 @@ export default class EntityForm extends React.Component {
                             const belongsToEntityBeingEdited =
                                 this.editing && (entity._id === this.props.entity[selectElementId]);
                             if (!this.editing || !belongsToEntityBeingEdited) {
-                                if (currentRouteEntities.filter(currentEntity => currentEntity[selectElementId]._id === entity._id).length > 0) {
+                                if (currentRouteEntities.filter(currentEntity =>
+                                    currentEntity[selectElementId]._id === entity._id).length > 0) {
                                     return;
                                 }
                             }

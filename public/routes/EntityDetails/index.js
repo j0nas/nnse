@@ -45,9 +45,8 @@ export default class EntityDetails extends React.Component {
 
     render() {
         const details = <StaticContentBox title={this.props.route.apipath} content={this.state.data}/>;
-        const entityForm = <EntityForm entity={this.state.data} route={{"apipath": this.props.route.apipath}}/>;
+        const entityForm = <EntityForm entity={this.state.data} route={{apipath: this.props.route.apipath}}/>;
 
-        //<a className="btn btn-primary" onClick={() => browserHistory.push(window.location.pathname + '/edit')}>Endre</a>
         const editBtn = <a className="btn btn-primary" onClick={() => this.setState({editing: true})}>Endre</a>;
         const cancelEditBtn = <a className="btn btn-danger" onClick={() => this.setState({editing: false})}>Avbryt</a>;
         const deleteButton = <a className="btn btn-danger" onClick={() => this.deleteEntity()}>Slett</a>;
