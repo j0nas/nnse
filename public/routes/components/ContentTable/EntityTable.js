@@ -3,10 +3,6 @@ import {Link} from "react-router";
 import FormEntities from "../../EntityForm/FormEntities";
 
 export default class EntityTable extends React.Component {
-
-    // TODO replace forEach with map for ESLint compliance
-    // TODO extract rendering logic from content parsing logic, split into separate classes
-
     constructor() {
         super();
         this.lastCellSorted = -1;
@@ -44,25 +40,22 @@ export default class EntityTable extends React.Component {
     }
 
     makeSortable(table) {
-        let tableHead = table.tHead;
-        let i;
-        tableHead && (tableHead = tableHead.rows[0]) && (tableHead = tableHead.cells);
-        if (tableHead) {
-            i = tableHead.length;
-        } else {
+        const tableHead = table.tHead && table.tHead.rows[0] && table.tHead.rows[0].cells;
+        if (!tableHead) {
             return;
         }
 
+        let i = tableHead.length;
         const ref = this;
         while (--i >= 0) {
-            (function (i) {
+            (i => {
                 let dir = 1;
-                tableHead[i].addEventListener('click', () => ref.sortTable(table, i, (dir = 1 - dir)));
-            }(i));
+                tableHead[i].addEventListener('click', () => ref.sortTable(table, i, ++dir % 2 === 0));
+            })(i);
         }
     }
 
-    getTableHeader() {
+    createTableHeader() {
         const entityObject = FormEntities.getEntityObject(this.props.apipath);
         return (
             <thead>
@@ -74,7 +67,7 @@ export default class EntityTable extends React.Component {
         );
     }
 
-    getTableRow(entity) {
+    createTableRow(entity) {
         return (
             <tr key={entity._id}>
                 {Object.keys(entity).map(key => this.getTableContent(key, entity[key], entity))}
@@ -94,30 +87,28 @@ export default class EntityTable extends React.Component {
         return <td key={key + "_" + value}>{value}</td>;
     }
 
-    // TODO make date formatting less hackish -- look at input type?
     formatDate(timestamp) {
         if (!timestamp) {
             return;
         }
 
-        const stamp = timestamp.split("T")[0];
-        const split = stamp.split("-");
-        return `${split[2]}.${split[1]}.${split[0]}`;
+        const date = new Date(timestamp);
+        return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
     }
 
     formatEntities(entities) {
         const entityObject = FormEntities.getEntityObject(this.props.apipath);
         const result = [];
 
-        entities.map((entity, index) => {
+        entities.forEach((entity, index) => {
             result[index] = {_id: entity._id};
 
-            Object.keys(entityObject).map(key => {
+            Object.keys(entityObject).forEach(key => {
                 if (entityObject[key].type === "date") {
                     result[index][key] = this.formatDate(entity[key]);
                 } else if (entityObject[key].identifiers) {
                     result[index][key] = "";
-                    entityObject[key].identifiers.map(identifier => {
+                    entityObject[key].identifiers.forEach(identifier => {
                         if (entity[key]) {
                             result[index][key] += entity[key][identifier] + " ";
                         }
@@ -141,13 +132,11 @@ export default class EntityTable extends React.Component {
 
     getTableContents() {
         const formattedEntities = this.formatEntities(this.props.entities);
-        return <tbody>{formattedEntities.map(entity => this.getTableRow(entity))}</tbody>;
+        return <tbody>{formattedEntities.map(entity => this.createTableRow(entity))}</tbody>;
     }
 
     componentDidUpdate(prevProps) {
-        if (!this.prevPath) {
-            this.prevPath = prevProps.apipath;
-        } else {
+        if (this.prevPath) {
             this.prevPath = null;
             this.lastCellSorted = -1;
             const entityTable = document.getElementById("entityTable");
@@ -155,9 +144,10 @@ export default class EntityTable extends React.Component {
 
             const searchInput = document.getElementById("filterTableSearch");
             searchInput.value = "";
+        } else {
+            this.prevPath = prevProps.apipath;
         }
     }
-
 
     onSearchChange() {
         const searchInput = document.getElementById("filterTableSearch");
@@ -216,7 +206,7 @@ export default class EntityTable extends React.Component {
                 </div>
                 <div className="carEvaluationInfo">
                     <table className="table" id="entityTable">
-                        {this.getTableHeader()}
+                        {this.createTableHeader()}
                         {this.getTableContents()}
                     </table>
                 </div>
