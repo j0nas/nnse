@@ -10,23 +10,23 @@ export default class EntityTable extends React.Component {
         this.onSearchChange = this.onSearchChange.bind(this);
     }
 
-    handleArrowCharDisplaying(cells, column, reverse) {
-        if (this.lastCellSorted !== -1) {
-            const cell = cells[this.lastCellSorted];
+    handleArrowCharDisplaying(lastCellSorted, cells, column, reverse) {
+        if (lastCellSorted !== -1) {
+            const cell = cells[lastCellSorted];
             cell.textContent = cell.textContent.slice(0, -2);
         }
 
         const downArrow = " \u2193";
         const upArrow = " \u2191";
         cells[column].textContent += reverse ? downArrow : upArrow;
-        this.lastCellSorted = column;
+        return column;
     }
 
     // http://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript
     sortTable(table, column, reverse) {
         const tableBody = table.tBodies[0];
-
-        this.handleArrowCharDisplaying(table.tHead.rows[0].cells, column, reverse);
+        this.lastCellSorted =
+            this.handleArrowCharDisplaying(this.lastCellSorted, table.tHead.rows[0].cells, column, reverse);
 
         let tableRow = Array.prototype.slice.call(tableBody.rows, 0);
         reverse = -(Number(reverse) || -1);
@@ -55,8 +55,7 @@ export default class EntityTable extends React.Component {
         }
     }
 
-    createTableHeader() {
-        const entityObject = FormEntities.getEntityObject(this.props.apipath);
+    createTableHeader(entityObject) {
         return (
             <thead>
             <tr>
@@ -64,6 +63,14 @@ export default class EntityTable extends React.Component {
                 {Object.keys(entityObject).map(key => <th key={entityObject[key].value}>{entityObject[key].value}</th>)}
             </tr>
             </thead>
+        );
+    }
+
+    getTableContent(key, value) {
+        return (
+            <td key={key + "_" + value}>
+                {key === '_id' ? <Link to={this.props.apipath + '/' + value}>{value}</Link> : value}
+            </td>
         );
     }
 
@@ -75,82 +82,60 @@ export default class EntityTable extends React.Component {
         );
     }
 
-    getTableContent(key, value) {
-        if (key === '_id') {
-            return (
-                <td key={value}>
-                    <Link to={this.props.apipath + '/' + value}>{value}</Link>
-                </td>
-            );
-        }
-
-        return <td key={key + "_" + value}>{value}</td>;
-    }
-
     formatDate(timestamp) {
-        if (!timestamp) {
-            return;
-        }
-
         const date = new Date(timestamp);
         return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
     }
 
     formatEntities(entities) {
+        if (!entities) {
+            return;
+        }
+
         const entityObject = FormEntities.getEntityObject(this.props.apipath);
         const result = [];
 
         entities.forEach((entity, index) => {
             result[index] = {_id: entity._id};
-
             Object.keys(entityObject).forEach(key => {
-                if (entityObject[key].type === "date") {
-                    result[index][key] = this.formatDate(entity[key]);
-                } else if (entityObject[key].identifiers) {
-                    result[index][key] = "";
-                    entityObject[key].identifiers.forEach(identifier => {
-                        if (entity[key]) {
-                            result[index][key] += entity[key][identifier] + " ";
-                        }
-                    });
-
-                    if (entity[key]) {
-                        result[index][key] = (
-                            <Link to={entityObject[key].endpoint + "/" + entity[key]._id}>
-                                {result[index][key]}
-                            </Link>
-                        );
-                    }
-                } else {
-                    result[index][key] = entity[key];
-                }
+                result[index][key] = this.processTypedEntity(entityObject[key].type, entity[key], entityObject[key]);
             });
         });
 
         return result;
     }
 
-    getTableContents() {
-        const formattedEntities = this.formatEntities(this.props.entities);
-        return <tbody>{formattedEntities.map(entity => this.createTableRow(entity))}</tbody>;
+    processTypedEntity(type, entity, entityObject) {
+        switch (type) {
+        case "date":
+            return this.formatDate(entity);
+        case "entity_reference":
+            return this.createForeignEntityLink(entityObject.identifiers, entityObject.endpoint, entity);
+        default:
+            return entity;
+        }
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.prevPath) {
-            this.prevPath = null;
-            this.lastCellSorted = -1;
-            const entityTable = document.getElementById("entityTable");
-            this.makeSortable(entityTable);
-
-            const searchInput = document.getElementById("filterTableSearch");
-            searchInput.value = "";
-        } else {
-            this.prevPath = prevProps.apipath;
+    createForeignEntityLink(identifierFields, endpoint, entity) {
+        const sanity = identifierFields && endpoint && entity;
+        if (!sanity) {
+            return;
         }
+
+        return <Link to={endpoint + "/" + entity._id}>{identifierFields.map(field => entity[field] + " ")}</Link>;
+    }
+
+    getTableContents(entities) {
+        const formatEntities = this.formatEntities(entities);
+        return <tbody>{formatEntities.map(entity => this.createTableRow(entity))}</tbody>;
     }
 
     onSearchChange() {
         const searchInput = document.getElementById("filterTableSearch");
+        if (!searchInput) {
+            return;
+        }
+
         const searchText = searchInput.value.toLowerCase();
 
         const entityTable = document.getElementById("entityTable");
@@ -176,6 +161,22 @@ export default class EntityTable extends React.Component {
                     rows[i].style.display = "none";
                 }
             }
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.prevPath) {
+            this.prevPath = null;
+            this.lastCellSorted = -1;
+            const entityTable = document.getElementById("entityTable");
+            this.makeSortable(entityTable);
+
+            const searchInput = document.getElementById("filterTableSearch");
+            if (searchInput) {
+                searchInput.value = "";
+            }
+        } else {
+            this.prevPath = prevProps.apipath;
         }
     }
 
@@ -206,8 +207,8 @@ export default class EntityTable extends React.Component {
                 </div>
                 <div className="carEvaluationInfo">
                     <table className="table" id="entityTable">
-                        {this.createTableHeader()}
-                        {this.getTableContents()}
+                        {this.createTableHeader(FormEntities.getEntityObject(this.props.apipath))}
+                        {this.getTableContents(this.props.entities)}
                     </table>
                 </div>
             </div>
