@@ -1,5 +1,5 @@
 import React from "react";
-import EntityTable from "../components/ContentTable/EntityTable";
+import EntityTable from "../components/ContentTable";
 
 export default class Entity extends React.Component {
     constructor(props) {

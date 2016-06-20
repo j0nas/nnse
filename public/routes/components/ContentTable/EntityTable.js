@@ -1,16 +1,8 @@
 import React, {PropTypes} from "react";
 import {Link} from "react-router";
-import FormEntities from "../../EntityForm/FormEntities";
-import TableSearchInput from "./TableSearchInput";
-import EntityFormatter from "./EntityFormatter";
+
 
 export default class EntityTable extends React.Component {
-    constructor() {
-        super();
-        this.lastCellSorted = -1;
-        this.prevPath = "none";
-    }
-
     handleArrowCharDisplaying(lastCellSorted, cells, column, reverse) {
         if (lastCellSorted !== -1) {
             const cell = cells[lastCellSorted];
@@ -42,6 +34,7 @@ export default class EntityTable extends React.Component {
             return;
         }
 
+        this.lastCellSorted = -1;
         Array.from(tableHead).forEach((cell, i) =>
             (i => {
                 let dir = 1;
@@ -81,61 +74,29 @@ export default class EntityTable extends React.Component {
         return <tbody>{entities.map(entity => this.createTableRow(entity))}</tbody>;
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.prevPath) {
-            this.prevPath = null;
-            this.lastCellSorted = -1;
-
-            this.makeSortable(document.getElementById("entityTable"));
-
-            const searchInput = document.getElementById("tableSearch");
-            if (searchInput) {
-                searchInput.value = "";
-            }
-        } else {
-            this.prevPath = prevProps.apipath;
+    componentWillUpdate() {
+        if (this.lastCellSorted && this.lastCellSorted !== -1) {
+            const cell = document.getElementById("entityTable").tHead.rows[0].cells[this.lastCellSorted];
+            cell.textContent = cell.textContent.slice(0, -2);
         }
     }
 
-    render() {
-        const entityObject = FormEntities.getEntityObject(this.props.apipath);
-        const formattedEntities = EntityFormatter.formatEntities(this.props.entities, entityObject);
+    componentDidUpdate() {
+        this.makeSortable(document.getElementById("entityTable"));
+    }
 
+    render() {
         return (
-            <div className="carEvaluationInfoContain">
-                <div className="containerHeading">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-xs-6">
-                                {this.props.title}
-                            </div>
-                            <div className="col-xs-6">
-                                <div className="row text-right">
-                                    <div className="col-xs-offset-6 col-xs-4">
-                                        <TableSearchInput placeholder="Søk" id="tableSearch" tableId={"entityTable"}/>
-                                    </div>
-                                    <div className="col-xs-2">
-                                        <Link className="btn btn-primary form-control" to={this.props.apipath + '/new'}>
-                                            Opprett ny
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="carEvaluationInfo">
-                    <table className="table" id="entityTable">
-                        {this.createTableHeader(entityObject)}
-                        {this.createTableContents(formattedEntities)}
-                    </table>
-                </div>
-            </div>
+            <table className="table" id="entityTable">
+                {this.createTableHeader(this.props.entityObject)}
+                {this.createTableContents(this.props.entities)}
+            </table>
         );
     }
 }
 
 EntityTable.propTypes = {
+    entityObject: PropTypes.object.isRequired,
     entities: PropTypes.array.isRequired
 };
 
