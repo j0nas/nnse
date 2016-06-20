@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, PropTypes} from "react";
 
 export default class TableSearchInput extends Component {
     constructor(props) {
@@ -33,6 +33,13 @@ export default class TableSearchInput extends Component {
         });
     }
 
+    componentWillUpdate() {
+        const thisElement = document.getElementById(this.props.id);
+        if (thisElement) {
+            thisElement.value = "";
+        }
+    }
+
     render() {
         return (
             <input
@@ -44,3 +51,8 @@ export default class TableSearchInput extends Component {
         );
     }
 }
+
+TableSearchInput.propTypes = {
+    id: PropTypes.string.isRequired,
+    placeholder: PropTypes.string.isRequired
+};
