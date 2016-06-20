@@ -1,13 +1,13 @@
 import React, {PropTypes} from "react";
 import {Link} from "react-router";
 import FormEntities from "../../EntityForm/FormEntities";
+import TableSearchInput from "./TableSearchInput";
 
 export default class EntityTable extends React.Component {
     constructor() {
         super();
         this.lastCellSorted = -1;
         this.prevPath = "none";
-        this.onSearchChange = this.onSearchChange.bind(this);
     }
 
     handleArrowCharDisplaying(lastCellSorted, cells, column, reverse) {
@@ -130,40 +130,6 @@ export default class EntityTable extends React.Component {
         return <tbody>{formatEntities.map(entity => this.createTableRow(entity))}</tbody>;
     }
 
-    onSearchChange() {
-        const searchInput = document.getElementById("filterTableSearch");
-        if (!searchInput) {
-            return;
-        }
-
-        const searchText = searchInput.value.toLowerCase();
-
-        const entityTable = document.getElementById("entityTable");
-        const rows = entityTable.tBodies[0].rows;
-
-        if (searchText === "") {
-            for (let i = 0; i < rows.length; i++) {
-                rows[i].style.display = "table-row";
-            }
-
-            return;
-        }
-
-        for (let i = 0; i < rows.length; i++) {
-            const cellCount = rows[i].cells.length;
-            for (let j = 0; j < cellCount; j++) {
-                if (rows[i].cells[j].textContent.toLowerCase().indexOf(searchText) > -1) {
-                    rows[i].style.display = "table-row";
-                    break;
-                }
-
-                if (j === cellCount - 1) {
-                    rows[i].style.display = "none";
-                }
-            }
-        }
-    }
-
     componentDidUpdate(prevProps) {
         if (this.prevPath) {
             this.prevPath = null;
@@ -171,7 +137,7 @@ export default class EntityTable extends React.Component {
             const entityTable = document.getElementById("entityTable");
             this.makeSortable(entityTable);
 
-            const searchInput = document.getElementById("filterTableSearch");
+            const searchInput = document.getElementById("tableSearch");
             if (searchInput) {
                 searchInput.value = "";
             }
@@ -192,8 +158,7 @@ export default class EntityTable extends React.Component {
                             <div className="col-xs-6">
                                 <div className="row text-right">
                                     <div className="col-xs-offset-6 col-xs-4">
-                                        <input type="search" placeholder="Søk" className="form-control"
-                                               id="filterTableSearch" onChange={() => this.onSearchChange()}/>
+                                        <TableSearchInput placeholder="Søk" id="tableSearch" tableId={"entityTable"} />
                                     </div>
                                     <div className="col-xs-2">
                                         <Link className="btn btn-primary form-control" to={this.props.apipath + '/new'}>
