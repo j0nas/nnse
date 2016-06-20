@@ -3,15 +3,15 @@ export default class FormEntities {
         switch (apiPath) {
         case "/tenants":
             return {
-                name_first: {
+                firstName: {
                     value: "Fornavn",
                     type: "text"
                 },
-                name_middle: {
+                middleName: {
                     value: "Mellomnavn",
                     type: "text"
                 },
-                name_last: {
+                lastName: {
                     value: "Etternavn",
                     type: "text"
                 },
@@ -71,7 +71,7 @@ export default class FormEntities {
                     value: "Leietaker",
                     type: "entity_reference",
                     endpoint: "/tenants",
-                    identifiers: ["name_first", "name_middle", "name_last"]
+                    identifiers: ["firstName", "middleName", "lastName"]
                 },
                 _room: {
                     value: "Rom",

@@ -8,17 +8,9 @@ import EntityTable from "./EntityTable";
 
 export default class ContentTable extends Component {
     render() {
-
-        // TODO
-        /*
-         const searchInput = document.getElementById("tableSearch");
-         if (searchInput) {
-         searchInput.value = "";
-         }
-
-         */
-        const entityObject = FormEntities.getEntityObject(this.props.apipath);
-        const formattedEntities = EntityFormatter.formatEntities(this.props.entities, entityObject);
+        const apiPath = this.props.apipath;
+        const entityObject = FormEntities.getEntityObject(apiPath);
+        const formattedEntities = EntityFormatter.formatEntities(this.props.entities, entityObject, apiPath);
 
         return (
             <div className="carEvaluationInfoContain">
@@ -34,7 +26,7 @@ export default class ContentTable extends Component {
                                         <TableSearchInput placeholder="Søk" id="tableSearch" tableId={"entityTable"}/>
                                     </div>
                                     <div className="col-xs-2">
-                                        <Link className="btn btn-primary form-control" to={this.props.apipath + '/new'}>
+                                        <Link className="btn btn-primary form-control" to={apiPath + '/new'}>
                                             Opprett ny
                                         </Link>
                                     </div>

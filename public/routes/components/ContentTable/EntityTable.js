@@ -1,6 +1,4 @@
 import React, {PropTypes} from "react";
-import {Link} from "react-router";
-
 
 export default class EntityTable extends React.Component {
     handleArrowCharDisplaying(lastCellSorted, cells, column, reverse) {
@@ -47,27 +45,18 @@ export default class EntityTable extends React.Component {
             <thead>
             <tr>
                 <th>Id</th>
-                {Object.keys(entityObject).map(key =>
-                    <th key={entityObject[key].value}>{entityObject[key].value}</th>)}
+                {Object.keys(entityObject).map(key => <th key={entityObject[key].value}>{entityObject[key].value}</th>)}
             </tr>
             </thead>
         );
     }
 
     createTableColumn(key, value) {
-        return (
-            <td key={key + "_" + value}>
-                {key === '_id' ? <Link to={this.props.apipath + '/' + value}>{value}</Link> : value}
-            </td>
-        );
+        return <td key={key + "_" + value}>{value}</td>;
     }
 
     createTableRow(entity) {
-        return (
-            <tr key={entity._id}>
-                {Object.keys(entity).map(key => this.createTableColumn(key, entity[key], entity))}
-            </tr>
-        );
+        return <tr key={entity._id.key}>{Object.keys(entity).map(key => this.createTableColumn(key, entity[key]))}</tr>;
     }
 
     createTableContents(entities) {

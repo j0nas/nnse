@@ -27,11 +27,11 @@ export default class EntityFormatter {
         }
     }
 
-    static formatEntities(entities, entityObject) {
+    static formatEntities(entities, entityObject, apiPath) {
         const result = [];
 
         entities.forEach((entity, index) => {
-            result[index] = {_id: entity._id};
+            result[index] = {_id: <Link to={apiPath + "/" + entity._id} key={entity._id}>{entity._id}</Link>};
             Object.keys(entityObject).forEach(key => {
                 result[index][key] = this.processTypedEntity(entity[key], entityObject[key]);
             });

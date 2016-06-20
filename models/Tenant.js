@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 
 var tenantSchema = mongoose.Schema({
-    name_first: String,
-    name_middle: String,
-    name_last: String,
+    firstName: String,
+    middleName: String,
+    lastName: String,
     email: String,
     phone: String,
     _mailbox: {type: mongoose.Schema.Types.ObjectId, ref: 'Mailbox'}
