@@ -1,15 +1,21 @@
 const express = require('express');
 const path = require('path');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
+const app = express();
 
-const config = require('./webpack.config.js');
-const compiler = webpack(config);
+if (process.argv.includes("--dev")) {
+    const webpack = require('webpack');
+    const webpackDevMiddleware = require('webpack-dev-middleware');
+    const webpackHotMiddleware = require('webpack-hot-middleware');
 
-var app = express();
-app.use(webpackDevMiddleware(compiler, {noInfo: true, publicPath: config.output.publicPath}));
-app.use(webpackHotMiddleware(compiler));
+    const config = require('./webpack.config.js');
+    const compiler = webpack(config);
+    app.use(webpackDevMiddleware(compiler, {noInfo: true, publicPath: config.output.publicPath}));
+    app.use(webpackHotMiddleware(compiler));
+} else {
+    const publicPath = '/build/';
+    const outputPath = path.join(__dirname, 'public', 'build');
+    app.use(publicPath, express.static(outputPath));
+}
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -19,7 +25,6 @@ mongoose.init('mongodb://127.0.0.1:27017/nnse');
 
 const entityManager = require('./routes/entityManager');
 entityManager.init(app, 'api');
-
 ['Mailbox', 'Tenant', 'Lease', 'Room', 'Invoice'].forEach(entity => entityManager.setupEntities(entity));
 
 const indexHtmlPath = path.join(__dirname, 'public', 'index.html');
