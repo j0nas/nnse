@@ -13,9 +13,8 @@ if (debugMode) {
     app.use(webpackDevMiddleware(compiler, {noInfo: true, publicPath: config.output.publicPath}));
     app.use(webpackHotMiddleware(compiler));
 } else {
-    const publicPath = '/build/';
     const outputPath = path.join(__dirname, 'public', 'build');
-    app.use(publicPath, express.static(outputPath));
+    app.use('/build/', express.static(outputPath));
 }
 
 const bodyParser = require('body-parser');
@@ -23,7 +22,7 @@ app.use(bodyParser.json());
 
 const mongoose = require('./db/db');
 const localDbUrl = "mongodb://127.0.0.1:27017/nnse";
-const remoteDbUrl = " mongodb://nnse:nnse0heroku@ds019654.mlab.com:19654/heroku_grcd8z76";
+const remoteDbUrl = "mongodb://nnse:nnse0heroku@ds019654.mlab.com:19654/heroku_grcd8z76";
 const urlToUse = debugMode ? localDbUrl : remoteDbUrl;
 mongoose.init(urlToUse);
 
