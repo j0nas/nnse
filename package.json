@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "webpack --config webpack.production.js --color --progress",
-    "start": "node ./server.js",
-    "startdev": "node ./server.js --dev",
+    "start": "node server.js",
+    "startdev": "node server.js --dev",
     "lint": "eslint --ignore-path .gitignore --fix .",
     "pretest": "npm run lint"
   },

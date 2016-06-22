@@ -30,7 +30,7 @@ entityManager.init(app, 'api');
 const indexHtmlPath = path.join(__dirname, 'public', 'index.html');
 app.use((req, res) => res.sendFile(indexHtmlPath));
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, err => {
     if (err) {
         throw new Error(err);
