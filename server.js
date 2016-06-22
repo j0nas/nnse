@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 const mongoose = require('./db/db');
 const localDbUrl = "mongodb://127.0.0.1:27017/nnse";
-const remoteDbUrl = "mongodb://nnse:nnse0heroku@ds019654.mlab.com:19654/heroku_grcd8z76";
+const remoteDbUrl = "mongodb://heroku_grcd8z76:nnse0heroku@ds019654.mlab.com:19654/heroku_grcd8z76";
 const urlToUse = debugMode ? localDbUrl : remoteDbUrl;
 mongoose.init(urlToUse);
 
