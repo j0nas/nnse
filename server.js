@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-if (process.argv.includes("--dev")) {
+if (process.argv.indexOf("--dev") > -1) {
     const webpack = require('webpack');
     const webpackDevMiddleware = require('webpack-dev-middleware');
     const webpackHotMiddleware = require('webpack-hot-middleware');
