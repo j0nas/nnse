@@ -1,12 +1,12 @@
 const express = require('express');
 const path = require('path');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-
-var app = express();
+const app = express();
 
 if (process.argv.includes("--dev")) {
+    const webpack = require('webpack');
+    const webpackDevMiddleware = require('webpack-dev-middleware');
+    const webpackHotMiddleware = require('webpack-hot-middleware');
+
     const config = require('./webpack.config.js');
     const compiler = webpack(config);
     app.use(webpackDevMiddleware(compiler, {noInfo: true, publicPath: config.output.publicPath}));
