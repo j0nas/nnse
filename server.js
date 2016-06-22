@@ -2,7 +2,8 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-if (process.argv.indexOf("--dev") > -1) {
+const debugMode = process.argv.indexOf("--dev") > -1;
+if (debugMode) {
     const webpack = require('webpack');
     const webpackDevMiddleware = require('webpack-dev-middleware');
     const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -21,7 +22,10 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 const mongoose = require('./db/db');
-mongoose.init('mongodb://127.0.0.1:27017/nnse');
+const localDbUrl = "mongodb://127.0.0.1:27017/nnse";
+const remoteDbUrl = " mongodb://nnse:nnse0heroku@ds019654.mlab.com:19654/heroku_grcd8z76";
+const urlToUse = debugMode ? localDbUrl : remoteDbUrl;
+mongoose.init(urlToUse);
 
 const entityManager = require('./routes/entityManager');
 entityManager.init(app, 'api');
