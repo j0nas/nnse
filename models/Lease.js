@@ -13,6 +13,10 @@ var leaseSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Mailbox'
     },
+    _secondaryTenant: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tenant'
+    },
     from: Date,
     to: Date
 });

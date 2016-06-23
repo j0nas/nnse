@@ -35,6 +35,8 @@ export default class EntityForm extends React.Component {
     }
 
     fillSelectValues(selectElementId, endpoint, identifiers) {
+        const selectElement = document.getElementById(selectElementId);
+
         fetch("/api" + this.props.route.apipath)
             .then(res => res.json())
             .then(currentRouteEntities => {
@@ -42,20 +44,23 @@ export default class EntityForm extends React.Component {
 
                 fetch("/api" + endpoint)
                     .then(entities => entities.json())
-                    .then(entities => {
-                        const selectElement = document.getElementById(selectElementId);
-                        entities.forEach(entity => {
+                    .then(foreignEntities => {
+                        foreignEntities.forEach(foreignEntity => {
                             const belongsToEntityBeingEdited =
-                                this.editing && (entity._id === this.props.entity[selectElementId]);
+                                this.editing && (foreignEntity._id === this.props.entity[selectElementId]);
+
+                            let found = false;
                             if (!this.editing || !belongsToEntityBeingEdited) {
-                                if (currentRouteEntities.filter(currentEntity =>
-                                    currentEntity[selectElementId]._id === entity._id).length > 0) {
-                                    return;
-                                }
+                                currentRouteEntities.forEach(currentEntity =>
+                                    found = found || (Object.keys(currentEntity).filter(key =>
+                                            currentEntity[key] && currentEntity[key]._id === foreignEntity._id
+                                        ).length > 0));
+
+                                if (found) return;
                             }
 
-                            const entityIdentifier = this.getEntityIdentifierString(identifiers, entity);
-                            selectElement.options[optionIndex++] = new Option(entityIdentifier, entity._id);
+                            const entityIdentifier = this.getEntityIdentifierString(identifiers, foreignEntity);
+                            selectElement.options[optionIndex++] = new Option(entityIdentifier, foreignEntity._id);
                             if (belongsToEntityBeingEdited) {
                                 selectElement.options[optionIndex - 1].selected = true;
                             }

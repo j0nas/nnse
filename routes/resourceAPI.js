@@ -6,6 +6,7 @@ module.exports = function(model) {
             .populate('_tenant')
             .populate('_room')
             .populate('_mailbox')
+            .populate('_secondaryTenant') // TODO find a way to automate population regardless of amount of foreign entities
             .exec((err, items) => err ? next(err) : res.json(items)));
 
     router.post('/', (req, res, next) =>
