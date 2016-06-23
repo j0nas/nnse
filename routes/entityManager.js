@@ -1,40 +1,27 @@
-var app;
-var pathPrefix;
-
 module.exports = {
-    init: function(appReference, APIpathPrefix) {
-        app = appReference;
-        pathPrefix = APIpathPrefix;
-    },
-    setupEntities: function() {
-        var path = require('path');
-        var pluralize = require('pluralize');
+    setupEntity: function (appReference, APIpathPrefix, entityName) {
+        const path = require('path');
+        const pluralize = require('pluralize');
 
-        for (var i = 0; i < arguments.length; i++) {
-            var entityName = arguments[i];
+        const modelPath = path.join('../models/', entityName);
+        const model = require(modelPath);
 
-            var modelPath = path.join('../models/', entityName);
-            var model = require(modelPath);
+        const baseAPI = require('../routes/resourceAPI')(model);
 
-            var baseAPI = require('../routes/resourceAPI')(model);
+        var decoratedAPI;
+        const decoratorName = entityName.toLowerCase() + 'Decorator';
+        const decoratorPath = './apiDecorators/' + decoratorName;
 
-            var decoratedAPI;
-            var decoratorName = entityName.toLowerCase() + 'Decorator';
-            var decoratorPath = './apiDecorators/' + decoratorName;
-
-            try {
-                decoratedAPI = require(decoratorPath)(baseAPI, model);
-            } catch (ignored) {
-            }
-
-            var route = '/' + pluralize(entityName.toLowerCase()) + '/';
-            if (pathPrefix !== undefined) {
-                route = '/' + pathPrefix + route;
-            }
-
-            var APItoUse = decoratedAPI === undefined ? baseAPI : decoratedAPI;
-            app.use(route, APItoUse);
-            console.log('Set up route ' + route);
+        try {
+            decoratedAPI = require(decoratorPath)(baseAPI, model);
+        } catch (ignored) {
         }
+
+        const routePrefix = APIpathPrefix === undefined ? '' : '/' + APIpathPrefix;
+        const route = routePrefix + '/' + pluralize(entityName.toLowerCase()) + '/';
+
+        const APItoUse = decoratedAPI === undefined ? baseAPI : decoratedAPI;
+        appReference.use(route, APItoUse);
+        console.log('Set up route ' + route);
     }
 };
