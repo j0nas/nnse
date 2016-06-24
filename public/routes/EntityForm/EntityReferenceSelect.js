@@ -11,6 +11,10 @@ export default class EntityReferenceSelect extends Component {
                 fetch("/api" + this.props.endpoint)
                     .then(foreignEntities => foreignEntities.json())
                     .then(foreignEntities => {
+                        if (this.props.optional === true) {
+                            this.addSelectElementOption("", "", selectElement, true);
+                        }
+
                         foreignEntities.forEach(foreignEntity => {
                             const belongsToEditedEntity =
                                 this.props.entity && foreignEntity._id === this.props.entity[this.props.id];
@@ -35,7 +39,9 @@ export default class EntityReferenceSelect extends Component {
     }
 
     entityIsAssociated(currentEntity, entityCollection) {
-        return entityCollection.some(entity => Object.keys(entity).some(key => entity[key]._id === currentEntity._id));
+        return entityCollection.some(entity => Object.keys(entity).some(
+            key => entity[key] && entity[key]._id === currentEntity._id
+        ));
     }
 
     getEntityIdentifierString(identifiers, entity) {
@@ -58,5 +64,6 @@ EntityReferenceSelect.propTypes = {
     id: PropTypes.string.isRequired,
     apipath: PropTypes.string.isRequired,
     endpoint: PropTypes.string.isRequired,
-    identifiers: PropTypes.array.isRequired
+    identifiers: PropTypes.array.isRequired,
+    optional: PropTypes.bool.isRequired
 };

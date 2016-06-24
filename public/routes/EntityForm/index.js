@@ -29,8 +29,10 @@ export default class EntityForm extends React.Component {
         const formBody = {};
         const entityObject = FormEntities.getEntityObject(this.props.route.apipath);
         Object.keys(entityObject).forEach(field => {
-            formBody[field] = document.getElementById(field).value;
+            const value = document.getElementById(field).value;
+            formBody[field] = value ? value : null;
         });
+
         return formBody;
     }
 
@@ -61,7 +63,8 @@ export default class EntityForm extends React.Component {
                         entity={this.props.entity}
                         apipath={this.props.route.apipath}
                         endpoint={requestedEntityObject.endpoint}
-                        identifiers={requestedEntityObject.identifiers}/> :
+                        identifiers={requestedEntityObject.identifiers}
+                        optional={requestedEntityObject.optional === true} /> :
                     <input type={requestedEntityObject.type} id={fieldId} className="form-control"
                            defaultValue={defaultValue}/>}
                 <br/>

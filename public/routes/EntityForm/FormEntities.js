@@ -89,7 +89,8 @@ export default class FormEntities {
                     value: "Sekundær leietaker",
                     type: "entity_reference",
                     endpoint: "/tenants",
-                    identifiers: ["firstName", "middleName", "lastName"]
+                    identifiers: ["firstName", "middleName", "lastName"],
+                    optional: true
                 }
             };
         default:
