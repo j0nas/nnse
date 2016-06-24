@@ -46,21 +46,10 @@ export default class EntityReferenceSelect extends Component {
     }
 
     getEntityIdentifierString(identifiers, entity) {
-        let identifiersString = "";
-        let addedFirstIdentifier = false;
-        identifiers.forEach(identifier => {
-            if (entity[identifier]) {
-                if (addedFirstIdentifier) {
-                    identifiersString += " ";
-                } else {
-                    addedFirstIdentifier = true;
-                }
-
-                identifiersString += entity[identifier];
-            }
-        });
-
-        return identifiersString;
+        return identifiers
+            .map(identifier => entity[identifier])
+            .filter(identifier => identifier !== "")
+            .join(" ");
     }
 
     componentDidMount() {
