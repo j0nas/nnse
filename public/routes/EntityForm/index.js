@@ -2,13 +2,12 @@ import React from "react";
 import ContentBox from "../components/ContentBox/ContentBox";
 import {browserHistory} from "react-router";
 import FormEntities from "./FormEntities";
+import EntityReferenceSelect from "./EntityReferenceSelect";
 
 export default class EntityForm extends React.Component {
     constructor(props) {
         super(props);
-
         this.editing = props.entity !== undefined;
-        this.fillSelectWithEntityCallbacks = [];
     }
 
     persistEntity() {
@@ -16,11 +15,12 @@ export default class EntityForm extends React.Component {
         const entityApiPath = '/api' + this.props.route.apipath + entityIdIfEditing;
         const method = this.editing ? 'PUT' : 'POST';
 
-        fetch(entityApiPath, {
+        const fetchConfig = {
             method: method,
             headers: new Headers({'Content-Type': 'application/json'}),
             body: JSON.stringify(this.getFormData())
-        })
+        };
+        fetch(entityApiPath, fetchConfig) // TODO await response before redirecting
             .then(browserHistory.push(this.props.route.apipath))
             .catch(err => console.log(err));
     }
@@ -34,107 +34,39 @@ export default class EntityForm extends React.Component {
         return formBody;
     }
 
-    fillSelectValues(selectElementId, endpoint, identifiers) {
-        const selectElement = document.getElementById(selectElementId);
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        const day = (date.getDate() > 9 ? "" : "0") + (date.getDate());
+        const month = (date.getMonth() > 8 ? "" : "0") + (date.getMonth() + 1);
 
-        fetch("/api" + this.props.route.apipath)
-            .then(res => res.json())
-            .then(currentRouteEntities => {
-                fetch("/api" + endpoint)
-                    .then(foreignEntities => foreignEntities.json())
-                    .then(foreignEntities => {
-                        foreignEntities.forEach(foreignEntity => {
-                            const belongsToEditedEntity =
-                                this.editing && foreignEntity._id === this.props.entity[selectElementId];
-
-                            if (belongsToEditedEntity || !this.entityIsAssociated(foreignEntity, currentRouteEntities)) {
-                                const identifierString = this.getEntityIdentifierString(identifiers, foreignEntity);
-                                this.addSelectElementOption(identifierString, foreignEntity._id, selectElement, belongsToEditedEntity);
-                            }
-                        });
-                    });
-            });
+        return `${date.getFullYear()}-${month}-${day}`;
     }
 
-    addSelectElementOption(text, value, selectElement, setAsSelected) {
-        const optionIndex = selectElement.options.length;
-        selectElement.options[optionIndex] = new Option(text, value);
-        if (setAsSelected) {
-            selectElement.options[optionIndex].selected = true;
-        }
-    }
-
-    entityIsAssociated(entity, entityCollection) {
-        for (let i = 0; i < entityCollection.length; i++) {
-            const keys = Object.keys(entityCollection[i]);
-            for (let j = 0; j < keys.length; j++) {
-                if (entityCollection[i][keys[j]] && entityCollection[i][keys[j]]._id === entity._id) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    getEntityIdentifierString(identifiers, entity) {
-        let identifiersString = "";
-        let added = false;
-        identifiers.forEach(identifier => {
-            if (entity[identifier]) {
-                if (added) {
-                    identifiersString += " ";
-                } else {
-                    added = true;
-                }
-
-                identifiersString += entity[identifier];
-            }
-        });
-
-        return identifiersString;
-    }
-
-    createFormContentMarkup(entityObject, field) {
-        if (entityObject[field].type === "entity_reference") {
-            this.fillSelectWithEntityCallbacks.push(() =>
-                this.fillSelectValues(field, entityObject[field].endpoint, entityObject[field].identifiers));
-        }
-
-        return this.createFormInput(entityObject[field].value, field, entityObject[field].type);
-    }
-
-    formatDate(date) {
-        const date2 = new Date(date);
-        const day = (date2.getDate() > 9 ? "" : "0") + (date2.getDate());
-        const month = (date2.getMonth() > 8 ? "" : "0") + (date2.getMonth() + 1);
-
-        return `${date2.getFullYear()}-${month}-${day}`;
-    }
-
-    createFormInput(label, fieldId, inputType) {
+    createFormInput(requestedEntityObject, fieldId) {
         let defaultValue = null;
         if (this.editing) {
             defaultValue = this.props.entity[fieldId];
 
-            if (inputType === "date") {
+            if (requestedEntityObject.type === "date") {
                 defaultValue = this.formatDate(defaultValue);
             }
         }
 
         return (
-            <span key={label + '_' + fieldId}>
-                <label>{label}</label>
-                {inputType === "entity_reference" ?
-                    <select id={fieldId} className="form-control"/> :
-                    <input type={inputType} id={fieldId} className="form-control" defaultValue={defaultValue}/>}
+            <span key={requestedEntityObject.value + '_' + fieldId}>
+                <label>{requestedEntityObject.value}</label>
+                {requestedEntityObject.type === "entity_reference" ?
+                    <EntityReferenceSelect
+                        id={fieldId}
+                        entity={this.props.entity}
+                        apipath={this.props.route.apipath}
+                        endpoint={requestedEntityObject.endpoint}
+                        identifiers={requestedEntityObject.identifiers}/> :
+                    <input type={requestedEntityObject.type} id={fieldId} className="form-control"
+                           defaultValue={defaultValue}/>}
                 <br/>
             </span>
         );
-    }
-
-    componentDidMount() {
-        this.fillSelectWithEntityCallbacks.forEach(func => func());
     }
 
     render() {
@@ -147,7 +79,7 @@ export default class EntityForm extends React.Component {
         return (
             <ContentBox>
                 <form id="entity-form" name="entity-form" enctype="application/json">
-                    {Object.keys(entityObject).map(field => this.createFormContentMarkup(entityObject, field))}
+                    {Object.keys(entityObject).map(field => this.createFormInput(entityObject[field], field))}
                 </form>
                 <button className="btn btn-success" onClick={() => this.persistEntity()}>{btnLabel}</button>
             </ContentBox>
