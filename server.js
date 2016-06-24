@@ -27,8 +27,8 @@ const urlToUse = debugMode ? localDbUrl : remoteDbUrl;
 mongoose.init(urlToUse);
 
 const entityManager = require('./routes/entityManager');
-entityManager.init(app, 'api');
-['Mailbox', 'Tenant', 'Lease', 'Room', 'Invoice'].forEach(entity => entityManager.setupEntities(entity));
+// TODO get these from FormEntities -> single source of truth!
+['Mailbox', 'Tenant', 'Lease', 'Room', 'Invoice'].forEach(entity => entityManager.setupEntity(app, 'api', entity));
 
 const indexHtmlPath = path.join(__dirname, 'public', 'index.html');
 app.use((req, res) => res.sendFile(indexHtmlPath));

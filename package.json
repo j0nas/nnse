@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.production.js --color --progress",
+    "build": "webpack --config webpack.production.js --progress",
     "start": "node server.js",
     "startdev": "node server.js --dev",
-    "lint": "eslint --ignore-path .gitignore --fix .",
+    "lint": "eslint --fix .",
     "pretest": "npm run lint"
   },
   "dependencies": {

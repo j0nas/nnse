@@ -13,7 +13,13 @@ export default class EntityFormatter {
             return;
         }
 
-        return <Link to={endpoint + "/" + entity._id}>{identifierFields.map(field => entity[field] + " ")}</Link>;
+        return (
+            <Link to={endpoint + "/" + entity._id}>
+                {identifierFields
+                    .filter(field => entity[field])
+                    .map(field => entity[field] + " ")}
+            </Link>
+        );
     }
 
     static processTypedEntity(entity, entityObject) {

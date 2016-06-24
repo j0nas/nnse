@@ -84,6 +84,13 @@ export default class FormEntities {
                     type: "entity_reference",
                     endpoint: "/mailboxes",
                     identifiers: ["number"]
+                },
+                _secondaryTenant: {
+                    value: "Sekundær leietaker",
+                    type: "entity_reference",
+                    endpoint: "/tenants",
+                    identifiers: ["firstName", "middleName", "lastName"],
+                    optional: true
                 }
             };
         default:
