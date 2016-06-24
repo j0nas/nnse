@@ -34,17 +34,8 @@ export default class EntityReferenceSelect extends Component {
         }
     }
 
-    entityIsAssociated(entity, entityCollection) {
-        for (let i = 0; i < entityCollection.length; i++) {
-            const keys = Object.keys(entityCollection[i]);
-            for (let j = 0; j < keys.length; j++) {
-                if (entityCollection[i][keys[j]] && entityCollection[i][keys[j]]._id === entity._id) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+    entityIsAssociated(currentEntity, entityCollection) {
+        return entityCollection.some(entity => Object.keys(entity).some(key => entity[key]._id === currentEntity._id));
     }
 
     getEntityIdentifierString(identifiers, entity) {
