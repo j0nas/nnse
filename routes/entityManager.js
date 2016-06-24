@@ -1,5 +1,5 @@
 module.exports = {
-    setupEntity: function (appReference, APIpathPrefix, entityName) {
+    setupEntity: function(appReference, APIpathPrefix, entityName) {
         const path = require('path');
         const pluralize = require('pluralize');
 

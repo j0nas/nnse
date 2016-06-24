@@ -2,11 +2,11 @@ module.exports = function(model) {
     var router = require('express').Router(); // eslint-disable-line new-cap
 
     router.get('/', (req, res, next) =>
-        model.find()
+        model.find() // TODO find a way to automate population regardless of amount of foreign entities
             .populate('_tenant')
             .populate('_room')
             .populate('_mailbox')
-            .populate('_secondaryTenant') // TODO find a way to automate population regardless of amount of foreign entities
+            .populate('_secondaryTenant')
             .exec((err, items) => err ? next(err) : res.json(items)));
 
     router.post('/', (req, res, next) =>

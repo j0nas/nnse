@@ -7,7 +7,7 @@ export default class EntityReferenceSelect extends Component {
 
         fetch("/api" + this.props.apipath)
             .then(res => res.json())
-            .then(currentRouteEntities => {
+            .then(currentEntities => {
                 fetch("/api" + this.props.endpoint)
                     .then(foreignEntities => foreignEntities.json())
                     .then(foreignEntities => {
@@ -15,9 +15,11 @@ export default class EntityReferenceSelect extends Component {
                             const belongsToEditedEntity =
                                 this.props.entity && foreignEntity._id === this.props.entity[this.props.id];
 
-                            if (belongsToEditedEntity || !this.entityIsAssociated(foreignEntity, currentRouteEntities)) {
-                                const identifierString = this.getEntityIdentifierString(this.props.identifiers, foreignEntity);
-                                this.addSelectElementOption(identifierString, foreignEntity._id, selectElement, belongsToEditedEntity);
+                            if (belongsToEditedEntity || !this.entityIsAssociated(foreignEntity, currentEntities)) {
+                                const identifierString =
+                                    this.getEntityIdentifierString(this.props.identifiers, foreignEntity);
+                                this.addSelectElementOption(identifierString,
+                                    foreignEntity._id, selectElement, belongsToEditedEntity);
                             }
                         });
                     });
