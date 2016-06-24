@@ -46,27 +46,34 @@ export default class EntityForm extends React.Component {
                     .then(entities => entities.json())
                     .then(foreignEntities => {
                         foreignEntities.forEach(foreignEntity => {
-                            const belongsToEntityBeingEdited =
+                            const belongsToEditedEntity =
                                 this.editing && (foreignEntity._id === this.props.entity[selectElementId]);
 
-                            let found = false;
-                            if (!this.editing || !belongsToEntityBeingEdited) {
-                                currentRouteEntities.forEach(currentEntity =>
-                                    found = found || (Object.keys(currentEntity).filter(key =>
-                                            currentEntity[key] && currentEntity[key]._id === foreignEntity._id
-                                        ).length > 0));
-
-                                if (found) return;
+                            if (!belongsToEditedEntity && this.entityIsAssociated(foreignEntity, currentRouteEntities)) {
+                                return;
                             }
 
                             const entityIdentifier = this.getEntityIdentifierString(identifiers, foreignEntity);
                             selectElement.options[optionIndex++] = new Option(entityIdentifier, foreignEntity._id);
-                            if (belongsToEntityBeingEdited) {
+                            if (belongsToEditedEntity) {
                                 selectElement.options[optionIndex - 1].selected = true;
                             }
                         });
                     });
             });
+    }
+
+    entityIsAssociated(entity, entityCollection) {
+        for (let i = 0; i < entityCollection.length; i++) {
+            const keys = Object.keys(entityCollection[i]);
+            for (let j = 0; j < keys.length; j++) {
+                if (entityCollection[i][keys[j]] && entityCollection[i][keys[j]]._id === entity._id) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     getEntityIdentifierString(identifiers, entity) {
