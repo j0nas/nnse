@@ -40,27 +40,28 @@ export default class EntityForm extends React.Component {
         fetch("/api" + this.props.route.apipath)
             .then(res => res.json())
             .then(currentRouteEntities => {
-                let optionIndex = 0;
-
                 fetch("/api" + endpoint)
-                    .then(entities => entities.json())
+                    .then(foreignEntities => foreignEntities.json())
                     .then(foreignEntities => {
                         foreignEntities.forEach(foreignEntity => {
                             const belongsToEditedEntity =
-                                this.editing && (foreignEntity._id === this.props.entity[selectElementId]);
+                                this.editing && foreignEntity._id === this.props.entity[selectElementId];
 
-                            if (!belongsToEditedEntity && this.entityIsAssociated(foreignEntity, currentRouteEntities)) {
-                                return;
-                            }
-
-                            const entityIdentifier = this.getEntityIdentifierString(identifiers, foreignEntity);
-                            selectElement.options[optionIndex++] = new Option(entityIdentifier, foreignEntity._id);
-                            if (belongsToEditedEntity) {
-                                selectElement.options[optionIndex - 1].selected = true;
+                            if (belongsToEditedEntity || !this.entityIsAssociated(foreignEntity, currentRouteEntities)) {
+                                const identifierString = this.getEntityIdentifierString(identifiers, foreignEntity);
+                                this.addSelectElementOption(identifierString, foreignEntity._id, selectElement, belongsToEditedEntity);
                             }
                         });
                     });
             });
+    }
+
+    addSelectElementOption(text, value, selectElement, setAsSelected) {
+        const optionIndex = selectElement.options.length;
+        selectElement.options[optionIndex] = new Option(text, value);
+        if (setAsSelected) {
+            selectElement.options[optionIndex].selected = true;
+        }
     }
 
     entityIsAssociated(entity, entityCollection) {
