@@ -1,9 +1,6 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const fetch = require('node-fetch');
-fetch.Promise = require('bluebird');
-const fs = require("fs");
 
 const debugMode = process.argv.indexOf("--dev") > -1;
 if (debugMode) {
@@ -52,19 +49,21 @@ function generateCsvLine(lease, delimiter) {
 }
 
 app.use("/api/makecsv", (req, res) => {
+    const fetch = require('node-fetch');
+    fetch.Promise = require('bluebird');
+    const fs = require("fs");
+
     fetch("http://localhost:3000/api/leases")
         .then(res => res.json())
         .then(leases => {
             const delimiter = ",";
-
             const headerColumns = ["Art", "Dato", "Bilag", "Mva", "debetkonto", "kreditkonto", "Beløp"];
             const headerString = headerColumns.join(delimiter) + "\n";
-
             const csvString = headerString + leases.map(lease => generateCsvLine(lease, delimiter)).join('');
-            const csvPath = './Invoices.csv';
-            fs.writeFile(csvPath, csvString, () =>
-                res.download(csvPath, () =>
-                    fs.unlink(csvPath)));
+            
+            res.set('Content-Type', 'text/csv');
+            res.set('Content-Disposition', 'attachment;filename=Invoice.csv');
+            res.send(csvString);
         });
 });
 
