@@ -61,10 +61,11 @@ app.use("/api/makecsv", (req, res) => {
             const headerString = headerColumns.join(delimiter) + "\n";
 
             const csvString = headerString + leases.map(lease => generateCsvLine(lease, delimiter)).join('');
-            fs.writeFile('./Invoices.csv', csvString, () => console.log("printed!"));
+            const csvPath = './Invoices.csv';
+            fs.writeFile(csvPath, csvString, () =>
+                res.download(csvPath, () =>
+                    fs.unlink(csvPath)));
         });
-
-    res.sendStatus(200);
 });
 
 const indexHtmlPath = path.join(__dirname, 'public', 'index.html');
