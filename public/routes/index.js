@@ -1,5 +1,5 @@
 import React from "react";
-import {Router, browserHistory, Route} from "react-router";
+import {Router, browserHistory, Route, IndexRedirect} from "react-router";
 import App from "./components/Appcontainer/";
 import Entity from "./Entity";
 import EntityDetails from "./EntityDetails";
@@ -12,6 +12,8 @@ export default class Root extends React.Component {
         return (
             <Router history={browserHistory}>
                 <Route path="/" component={App}>
+                    <IndexRedirect to={routes[1]} />
+
                     {routes.map(route => <Route path={route} component={Entity} key={route}/>)}
                     {routes.map(route =>
                         <Route path={route + "/new"} component={EntityForm} key={route + '_id_new'} apipath={route}/>)}
