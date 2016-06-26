@@ -11,15 +11,17 @@ module.exports = {
         filename: 'bundle.js',
         publicPath: '/build/'
     },
-    plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
-        new webpack.ProvidePlugin({fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'})
-    ],
     module: {
         loaders: [
             {test: /\.css$/, loader: 'style!css'},
             {test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel?cacheDirectory'}
         ]
-    }
+    },
+    debug: true,
+    devtool: "cheap-eval-source-map",
+    plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoErrorsPlugin(),
+        new webpack.ProvidePlugin({fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'})
+    ]
 };
