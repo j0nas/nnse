@@ -1,7 +1,7 @@
 import React from "react";
 import {Router, browserHistory, Route, IndexRedirect} from "react-router";
 import App from "./components/Appcontainer/";
-import GenerateInvoiceCSV from "./components/GenerateInvoiceCSV";
+import GenerateInvoices from "./GenerateInvoices";
 import Entity from "./Entity";
 import EntityDetails from "./EntityDetails";
 import EntityForm from "./EntityForm";
@@ -14,7 +14,7 @@ export default class Root extends React.Component {
             <Router history={browserHistory}>
                 <Route path="/" component={App}>
                     <IndexRedirect to={routes[1]} />
-                    <Route path="/csv" component={GenerateInvoiceCSV} />
+                    <Route path="/csv" component={GenerateInvoices} />
                     
                     {routes.map(route => <Route path={route} component={Entity} key={route}/>)}
                     {routes.map(route =>
