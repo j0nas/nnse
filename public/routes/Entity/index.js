@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import EntityTable from "../components/ContentTable";
+import ContentTable from "../components/ContentTable";
 
 export default class Entity extends Component {
     constructor(props) {
@@ -25,7 +25,7 @@ export default class Entity extends Component {
 
     render() {
         return <div>
-            <EntityTable title={this.props.route.path} entities={this.state.data} apipath={this.props.route.path}/>
+            <ContentTable title={this.props.route.path} entities={this.state.data} apipath={this.props.route.path}/>
             {this.props.children}
         </div>;
     }

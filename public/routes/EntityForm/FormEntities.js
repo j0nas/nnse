@@ -94,7 +94,7 @@ export default class FormEntities {
                 }
             };
         default:
-            return null;
+            throw new Error("Unknown entity path: " + apiPath)
         }
     }
 }

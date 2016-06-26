@@ -56,7 +56,9 @@ export default class EntityTable extends React.Component {
     }
 
     createTableRow(entity) {
-        return <tr key={entity._id.key}>{Object.keys(entity).map(key => this.createTableColumn(key, entity[key]))}</tr>;
+        const defined = entity._id.key;
+        const key = defined ? defined : entity._id;
+        return <tr key={key}>{Object.keys(entity).map(key => this.createTableColumn(key, entity[key]))}</tr>;
     }
 
     createTableContents(entities) {
