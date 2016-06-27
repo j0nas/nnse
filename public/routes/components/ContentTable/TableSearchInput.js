@@ -43,6 +43,7 @@ export default class TableSearchInput extends Component {
     render() {
         return (
             <input
+                aria-label="Søk"
                 placeholder={this.props.placeholder}
                 id={this.props.id}
                 type="search"
