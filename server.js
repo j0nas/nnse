@@ -30,18 +30,20 @@ const entityManager = require('./routes/entityManager');
 // TODO get these from FormEntities -> single source of truth!
 ['Mailbox', 'Tenant', 'Lease', 'Room', 'Invoice'].forEach(entity => entityManager.setupEntity(app, 'api', entity));
 
+const port = process.env.PORT || 3000;
+const url = "http://" + (debugMode ? "localhost:" + port : "nnse.herokuapp.com");
+
 const makeCsv = require('./routes/makeCsv');
-app.use("/api/makecsv", (req, res) => makeCsv.serveCsv(res));
+const leasesEndpoint = "/api/leases";
+app.use("/api/makecsv", (req, res) => makeCsv.serveCsv(res, url + leasesEndpoint));
 
 const indexHtmlPath = path.join(__dirname, 'public', 'index.html');
 app.use((req, res) => res.sendFile(indexHtmlPath));
 
-const port = process.env.PORT || 3000;
 app.listen(port, err => {
     if (err) {
         throw new Error(err);
     }
 
-    const url = debugMode ? "localhost:" + port : "nnse.herokuapp.com";
-    console.log('Listening on http://' + url);
+    console.log('Listening on ' + url);
 });

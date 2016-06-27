@@ -16,12 +16,12 @@ function generateCsvLine(lease, delimiter) {
 }
 
 module.exports = {
-    serveCsv: function (responseReference) {
+    serveCsv: function (responseReference, leasesPath) {
         const fetch = require('node-fetch');
         fetch.Promise = require('bluebird');
         const fs = require("fs");
 
-        fetch("http://localhost:3000/api/leases")
+        fetch(leasesPath)
             .then(leases => leases.json())
             .then(leases => {
                 const delimiter = ",";
