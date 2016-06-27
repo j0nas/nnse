@@ -15,7 +15,7 @@ export default class Root extends React.Component {
                 <Route path="/" component={App}>
                     <IndexRedirect to={routes[1]} />
                     <Route path="/csv" component={GenerateInvoices} />
-                    
+
                     {routes.map(route => <Route path={route} component={Entity} key={route}/>)}
                     {routes.map(route =>
                         <Route path={route + "/new"} component={EntityForm} key={route + '_id_new'} apipath={route}/>)}

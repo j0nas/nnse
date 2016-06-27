@@ -1,3 +1,9 @@
+/**
+ * Generates a delimiter-separated string in a specific order with values derived from lease parameter.
+ * @param {object} lease The lease entity which to derive the values from
+ * @param {string} delimiter The separator to use between the values in the resulting string
+ * @return {string} the string with values
+ */
 function generateCsvLine(lease, delimiter) {
     const date = new Date();
     const year = date.getFullYear();
@@ -16,10 +22,9 @@ function generateCsvLine(lease, delimiter) {
 }
 
 module.exports = {
-    serveCsv: function (responseReference, leasesPath) {
+    serveCsv: function(responseReference, leasesPath) {
         const fetch = require('node-fetch');
         fetch.Promise = require('bluebird');
-        const fs = require("fs");
 
         fetch(leasesPath)
             .then(leases => leases.json())
@@ -33,6 +38,5 @@ module.exports = {
                 responseReference.set('Content-Disposition', 'attachment;filename=Invoice.csv');
                 responseReference.send(csvString);
             });
-
     }
 };
