@@ -22,7 +22,8 @@
     "new-cap": 0
   },
   "plugins": [
-    "react"
+    "react",
+    "jsx-a11y"
   ]
 
 }
