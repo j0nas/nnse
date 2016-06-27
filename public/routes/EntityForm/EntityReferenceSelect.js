@@ -56,7 +56,7 @@ export default class EntityReferenceSelect extends Component {
     }
 
     render() {
-        return <select className="form-control" id={this.props.id}/>;
+        return <select className="form-control" id={this.props.id} aria-labelledby={this.props.labelledby}/>;
     }
 }
 

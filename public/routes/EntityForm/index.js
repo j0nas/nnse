@@ -64,13 +64,13 @@ export default class EntityForm extends React.Component {
                         apipath={this.props.route.apipath}
                         endpoint={requestedEntityObject.endpoint}
                         identifiers={requestedEntityObject.identifiers}
-                        optional={requestedEntityObject.optional === true}/> :
+                        optional={requestedEntityObject.optional === true}
+                        labelledby={requestedEntityObject.value + '_' + fieldId}/> :
                     <input
                         type={requestedEntityObject.type}
                         id={fieldId} className="form-control"
                         defaultValue={defaultValue}
-                        aria-labelledby={requestedEntityObject.value + '_' + fieldId}
-                    />}
+                        aria-labelledby={requestedEntityObject.value + '_' + fieldId}/>}
                 <br/>
             </span>
         );
