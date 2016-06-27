@@ -56,7 +56,7 @@ export default class EntityForm extends React.Component {
 
         return (
             <span key={requestedEntityObject.value + '_' + fieldId}>
-                <label>{requestedEntityObject.value}</label>
+                <label id={requestedEntityObject.value + '_' + fieldId}>{requestedEntityObject.value}</label>
                 {requestedEntityObject.type === "entity_reference" ?
                     <EntityReferenceSelect
                         id={fieldId}
@@ -64,9 +64,13 @@ export default class EntityForm extends React.Component {
                         apipath={this.props.route.apipath}
                         endpoint={requestedEntityObject.endpoint}
                         identifiers={requestedEntityObject.identifiers}
-                        optional={requestedEntityObject.optional === true} /> :
-                    <input type={requestedEntityObject.type} id={fieldId} className="form-control"
-                           defaultValue={defaultValue}/>}
+                        optional={requestedEntityObject.optional === true}/> :
+                    <input
+                        type={requestedEntityObject.type}
+                        id={fieldId} className="form-control"
+                        defaultValue={defaultValue}
+                        aria-labelledby={requestedEntityObject.value + '_' + fieldId}
+                    />}
                 <br/>
             </span>
         );
