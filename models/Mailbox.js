@@ -1,8 +1,9 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-auto-increment');
 
-var mailboxSchema = mongoose.Schema({
-    number: Number,
-    tenants: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tenant'}]
+const mailboxSchema = mongoose.Schema({
+    number: Number
 });
 
+mailboxSchema.plugin(autoIncrement.plugin, 'Mailbox');
 module.exports = mongoose.model('Mailbox', mailboxSchema);

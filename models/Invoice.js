@@ -6,7 +6,7 @@ const invoiceSchema = mongoose.Schema({
     date: Date,
     comment: String,
     tenant: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.Number,
         ref: 'Tenant'
     }
 });

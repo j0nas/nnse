@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-auto-increment');
 
 const tenantSchema = mongoose.Schema({
     ssn: Number,
@@ -6,11 +7,8 @@ const tenantSchema = mongoose.Schema({
     middleName: String,
     lastName: String,
     email: String,
-    phone: String,
-    _mailbox: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Mailbox'
-    }
+    phone: String
 });
 
+tenantSchema.plugin(autoIncrement.plugin, 'Tenant');
 module.exports = mongoose.model('Tenant', tenantSchema);

@@ -1,16 +1,10 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-auto-increment');
 
-var roomSchema = mongoose.Schema({
+const roomSchema = mongoose.Schema({
     number: Number,
-    rent: Number,
-    primaryTenant: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tenant'
-    },
-    secondaryTenants: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tenant'
-    }]
+    rent: Number
 });
 
+roomSchema.plugin(autoIncrement.plugin, 'Room');
 module.exports = mongoose.model('Room', roomSchema);
