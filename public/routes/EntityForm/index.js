@@ -20,8 +20,9 @@ export default class EntityForm extends React.Component {
             headers: new Headers({'Content-Type': 'application/json'}),
             body: JSON.stringify(this.getFormData())
         };
-        fetch(entityApiPath, fetchConfig) // TODO await response before redirecting
-            .then(browserHistory.push(this.props.route.apipath))
+
+        fetch(entityApiPath, fetchConfig)
+            .then((err, res) => browserHistory.push(this.props.route.apipath))
             .catch(err => console.log(err));
     }
 
