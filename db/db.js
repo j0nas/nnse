@@ -1,17 +1,15 @@
 module.exports = {
-    init: function(dbUrl) {
-        var mongoose = require('mongoose');
+    init: (dbUrl) => {
+        const mongoose = require('mongoose');
         mongoose.connect(dbUrl);
         mongoose.connection
-            .on('error', function(err) {
-                console.log('Failed to connect to DB: ' + err +
-                  ' - have you started mongod.exe?');
-            })
-            .on('connected', function() {
-                console.log('Connected to ' + dbUrl);
-            });
+            .on('error', (err) => console.log('Failed to connect to DB: ' + err + ' - have you started mongod.exe?'))
+            .on('connected', () => console.log('Connected to ' + dbUrl));
 
-        var dbConnectionShutdown = function() {
+        autoIncrement = require('mongoose-auto-increment');
+        autoIncrement.initialize(mongoose.connection);
+
+        const dbConnectionShutdown = () => {
             mongoose.connection.close();
             process.exit();
         };

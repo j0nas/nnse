@@ -1,6 +1,7 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-auto-increment');
 
-var invoiceSchema = mongoose.Schema({
+const invoiceSchema = mongoose.Schema({
     amount: Number,
     date: Date,
     comment: String,
@@ -10,4 +11,5 @@ var invoiceSchema = mongoose.Schema({
     }
 });
 
+invoiceSchema.plugin(autoIncrement.plugin, 'Invoice');
 module.exports = mongoose.model('Invoice', invoiceSchema);
