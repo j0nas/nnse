@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import ContentBox from "../components/ContentBox/ContentBox";
 import GenerateInvoiceCSV from "../components/GenerateInvoiceCSV";
 import EntityTable from "../components/ContentTable/EntityTable";
-import FormEntities from "../EntityForm/FormEntities";
+import ApplicationEntities from "../../ApplicationEntities";
 import EntityFormatter from "../components/ContentTable/EntityFormatter";
 
 export default class GenerateInvoices extends Component {
@@ -20,7 +20,7 @@ export default class GenerateInvoices extends Component {
     }
 
     render() {
-        const entityObject = FormEntities.getEntityObject("/leases");
+        const entityObject = ApplicationEntities.getEntityObject("/leases");
         const formattedEntities = EntityFormatter.formatEntities(this.state.leases, entityObject);
 
         return (

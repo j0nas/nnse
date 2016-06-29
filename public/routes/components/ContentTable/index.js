@@ -1,15 +1,14 @@
 import React, {Component, PropTypes} from "react";
 import {Link} from "react-router";
-
 import TableSearchInput from "./TableSearchInput";
-import FormEntities from "../../EntityForm/FormEntities";
+import ApplicationEntities from "../../../ApplicationEntities";
 import EntityFormatter from "./EntityFormatter";
 import EntityTable from "./EntityTable";
 
 export default class ContentTable extends Component {
     render() {
         const apiPath = this.props.apipath;
-        const entityObject = FormEntities.getEntityObject(apiPath);
+        const entityObject = ApplicationEntities.getEntityObject(apiPath);
         const formattedEntities = EntityFormatter.formatEntities(this.props.entities, entityObject, apiPath);
 
         return (

@@ -1,10 +1,8 @@
-import React from 'react';
-
-import NavBar from '../NavBar/';
-
-import '../../../css/main.css';
-import '../../../css/carEvaluation.css';
-import '../../../css/style.css';
+import React from "react";
+import NavBar from "../NavBar";
+import "../../../css/main.css";
+import "../../../css/carEvaluation.css";
+import "../../../css/style.css";
 
 export default class Appcontainer extends React.Component {
     render() {

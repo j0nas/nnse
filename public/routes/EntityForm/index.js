@@ -1,7 +1,7 @@
 import React from "react";
 import ContentBox from "../components/ContentBox/ContentBox";
 import {browserHistory} from "react-router";
-import FormEntities from "./FormEntities";
+import ApplicationEntities from "../../ApplicationEntities";
 import EntityReferenceSelect from "./EntityReferenceSelect";
 
 export default class EntityForm extends React.Component {
@@ -27,7 +27,7 @@ export default class EntityForm extends React.Component {
 
     getFormData() {
         const formBody = {};
-        const entityObject = FormEntities.getEntityObject(this.props.route.apipath);
+        const entityObject = ApplicationEntities.getEntityObject(this.props.route.apipath);
         Object.keys(entityObject).forEach(field => {
             const value = document.getElementById(field).value;
             formBody[field] = value ? value : null;
@@ -77,7 +77,7 @@ export default class EntityForm extends React.Component {
     }
 
     render() {
-        const entityObject = FormEntities.getEntityObject(this.props.route.apipath);
+        const entityObject = ApplicationEntities.getEntityObject(this.props.route.apipath);
         if (!entityObject) {
             return <div></div>;
         }

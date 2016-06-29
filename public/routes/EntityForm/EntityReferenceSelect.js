@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from "react";
 
 export default class EntityReferenceSelect extends Component {
-
     fillSelectValues() {
         const selectElement = document.getElementById(this.props.id);
 

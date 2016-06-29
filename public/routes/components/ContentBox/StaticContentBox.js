@@ -1,13 +1,14 @@
-import React, {PropTypes} from 'react';
-
-import ContentBox from './ContentBox';
+import React, {PropTypes} from "react";
+import ContentBox from "./ContentBox";
 
 export default class StaticContentBox extends React.Component {
     generateViewElement(labelValue, value) {
-        return <div className="table-static-key-value-pair" key={labelValue + '_' + value}>
-            <label htmlFor={'value_' + value} className="label">{labelValue}</label>&nbsp;
-            <span id={'value_' + value}>{value}</span>
-        </div>;
+        return (
+            <div className="table-static-key-value-pair" key={labelValue + '_' + value}>
+                <label htmlFor={'value_' + value} className="label">{labelValue}</label>&nbsp;
+                <span id={'value_' + value}>{value}</span>
+            </div>
+        );
     }
 
     render() {
