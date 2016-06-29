@@ -38,7 +38,10 @@ export default class EntityFormatter {
 
         entities.forEach((entity, index) => {
             result[index] = {
-                _id: apiPath ? <Link to={apiPath + "/" + entity._id} key={entity._id}>{entity._id}</Link> : entity._id
+                _id: apiPath ?
+                    <Link to={apiPath + "/" + entity._id} key={entity._id} aria-label="Link to entity">
+                        {entity._id}
+                    </Link> : entity._id
             };
 
             Object.keys(entityObject).forEach(key => {
