@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from "react";
+import ApplicationEntities from "../../ApplicationEntities";
 
 export default class EntityReferenceSelect extends Component {
     fillSelectValues() {
@@ -18,7 +19,7 @@ export default class EntityReferenceSelect extends Component {
                             const belongsToEditedEntity =
                                 this.props.entity && foreignEntity._id === this.props.entity[this.props.id];
 
-                            if (belongsToEditedEntity || !this.entityIsAssociated(foreignEntity, currentEntities)) {
+                            if (belongsToEditedEntity || !this.entityIsAssociated(foreignEntity, currentEntities, this.props.endpoint)) {
                                 const identifierString =
                                     this.getEntityIdentifierString(this.props.identifiers, foreignEntity);
                                 this.addSelectElementOption(identifierString,
@@ -37,10 +38,13 @@ export default class EntityReferenceSelect extends Component {
         }
     }
 
-    entityIsAssociated(currentEntity, entityCollection) {
-        return entityCollection.some(entity => Object.keys(entity).some(
-            key => entity[key] && entity[key]._id === currentEntity._id
-        ));
+    entityIsAssociated(currentEntity, entityCollection, entityEndpoint) {
+        const entityObject = ApplicationEntities.getEntityObject(this.props.apipath);
+        const matchingKeys = Object.keys(entityObject)
+            .filter(key => entityObject[key] && entityObject[key].endpoint === entityEndpoint);
+
+        return entityCollection.some(entityInCollection =>
+            matchingKeys.some(key => entityInCollection[key] && entityInCollection[key]._id === currentEntity._id));
     }
 
     getEntityIdentifierString(identifiers, entity) {

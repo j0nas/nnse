@@ -4,16 +4,16 @@
  * @param {string} delimiter The separator to use between the values in the resulting string
  * @return {string} the string with values
  */
-function generateCsvLine(lease, delimiter) {
+function generateCsvLine(lease, delimiter, invoiceId) {
     const date = new Date();
     const year = date.getFullYear();
     const currentDate = date.getDate() + '.' + date.getMonth() + '.' + String(year).slice(2, 4);
 
     const art = 1;
     const dato = currentDate;
-    const bilag = 0; // fakturanummer
+    const bilag = invoiceId; // fakturanummer
     const mva = 9;
-    const debetkonto = 0; // kundenummer
+    const debetkonto = (lease._tenant && lease._tenant._id) || -1; // kundenummer
     const kreditkonto = "";
     const beloep = lease._room && lease._room.rent;
 
@@ -22,21 +22,30 @@ function generateCsvLine(lease, delimiter) {
 }
 
 module.exports = {
-    serveCsv: function(responseReference, leasesPath) {
+    serveCsv: (responseReference, leasesPath) => {
         const fetch = require('node-fetch');
         fetch.Promise = require('bluebird');
 
-        fetch(leasesPath)
-            .then(leases => leases.json())
-            .then(leases => {
-                const delimiter = ",";
-                const headerColumns = ["Art", "Dato", "Bilag", "Mva", "debetkonto", "kreditkonto", "Beløp"];
-                const headerString = headerColumns.join(delimiter) + "\n";
-                const csvString = headerString + leases.map(lease => generateCsvLine(lease, delimiter)).join('');
+        const invoiceModel = require('../../models/Invoice');
+        invoiceModel.nextCount((err, count) => {
+            if (err) {
+                console.log("Error fetching next ID valuue for invoices @ makeCsv/index: " + err);
+                return;
+            }
 
-                responseReference.set('Content-Type', 'text/csv');
-                responseReference.set('Content-Disposition', 'attachment;filename=Invoice.csv');
-                responseReference.send(csvString);
-            });
+            fetch(leasesPath)
+                .then(leases => leases.json())
+                .then(leases => {
+                    const delimiter = ",";
+                    const headerColumns = ["Art", "Dato", "Bilag", "Mva", "debetkonto", "kreditkonto", "Beløp"];
+                    const headerString = headerColumns.join(delimiter) + "\n";
+                    const csvString = headerString + leases.map((lease, index) => generateCsvLine(lease, delimiter, count + index)).join('');
+
+                    responseReference.set('Content-Type', 'text/csv');
+                    responseReference.set('Content-Disposition', 'attachment;filename=Invoice.csv');
+                    responseReference.send(csvString);
+                });
+
+        })
     }
 };
