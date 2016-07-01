@@ -10,7 +10,7 @@ export default class Entity extends Component {
     }
 
     update(pathSuffix) {
-        fetch('/api' + pathSuffix)
+        fetch('/api' + pathSuffix + "?preventCaching=" + Math.random())
             .then(data => data.json())
             .then(entities => this.setState({data: entities}));
     }

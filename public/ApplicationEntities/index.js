@@ -1,8 +1,12 @@
-export default class FormEntities {
+export default class ApplicationEntities {
     static getEntityObject(apiPath) {
         switch (apiPath) {
         case "/tenants":
             return {
+                ssn: {
+                    value: "Personnummer",
+                    type: "number"
+                },
                 firstName: {
                     value: "Fornavn",
                     type: "text"

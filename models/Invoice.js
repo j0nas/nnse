@@ -1,13 +1,15 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-auto-increment');
 
-var invoiceSchema = mongoose.Schema({
+const invoiceSchema = mongoose.Schema({
     amount: Number,
     date: Date,
     comment: String,
     tenant: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.Number,
         ref: 'Tenant'
     }
 });
 
+invoiceSchema.plugin(autoIncrement.plugin, 'Invoice');
 module.exports = mongoose.model('Invoice', invoiceSchema);
