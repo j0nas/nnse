@@ -5,7 +5,7 @@
 function getFormattedDate() {
     const date = new Date();
     const year = date.getFullYear();
-    return date.getDate() + '.' + date.getMonth() + '.' + String(year).slice(2, 4);
+    return date.getDate() + '.' + (date.getMonth() + 1) + '.' + String(year).slice(2, 4);
 }
 
 /**
