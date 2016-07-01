@@ -26,7 +26,7 @@ function generateInvoiceCsvLine(lease, delimiter, invoiceId) {
  * Generates a delimiter-separated string in a specific order with values derived from lease parameter.
  * @param {object} lease The lease entity which to derive the values from
  * @param {string} delimiter The separator to use between the values in the resulting string
- * @returns {string} The string with values representing address data to accompany invoices
+ * @return {string} The string with values representing address data to accompany invoices
  */
 function generateAddressCsvLine(lease, delimiter) {
     const tenant = lease._tenant;
