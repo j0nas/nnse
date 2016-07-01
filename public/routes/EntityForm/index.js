@@ -86,7 +86,7 @@ export default class EntityForm extends React.Component {
         const btnLabel = this.editing ? "Oppdater" : "Opprett";
         return (
             <ContentBox>
-                <form id="entity-form" name="entity-form" enctype="application/json">
+                <form id="entity-form" name="entity-form" encType="application/json">
                     {Object.keys(entityObject).map(field => this.createFormInput(entityObject[field], field))}
                 </form>
                 <button className="btn btn-success" onClick={() => this.persistEntity()}>{btnLabel}</button>
