@@ -19,7 +19,9 @@ export default class EntityReferenceSelect extends Component {
                             const belongsToEditedEntity =
                                 this.props.entity && foreignEntity._id === this.props.entity[this.props.id];
 
-                            if (belongsToEditedEntity || !this.entityIsAssociated(foreignEntity, currentEntities, this.props.endpoint)) {
+                            const notAssociated =
+                                !this.entityIsAssociated(foreignEntity, currentEntities, this.props.endpoint);
+                            if (belongsToEditedEntity || notAssociated) {
                                 const identifierString =
                                     this.getEntityIdentifierString(this.props.identifiers, foreignEntity);
                                 this.addSelectElementOption(identifierString,

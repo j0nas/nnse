@@ -2,6 +2,7 @@
  * Generates a delimiter-separated string in a specific order with values derived from lease parameter.
  * @param {object} lease The lease entity which to derive the values from
  * @param {string} delimiter The separator to use between the values in the resulting string
+ * @param {number} invoiceId The id which to associate with the created line
  * @return {string} the string with values
  */
 function generateCsvLine(lease, delimiter, invoiceId) {
@@ -39,13 +40,13 @@ module.exports = {
                     const delimiter = ",";
                     const headerColumns = ["Art", "Dato", "Bilag", "Mva", "debetkonto", "kreditkonto", "Beløp"];
                     const headerString = headerColumns.join(delimiter) + "\n";
-                    const csvString = headerString + leases.map((lease, index) => generateCsvLine(lease, delimiter, count + index)).join('');
+                    const csvString = headerString + leases.map((lease, index) =>
+                            generateCsvLine(lease, delimiter, count + index)).join('');
 
                     responseReference.set('Content-Type', 'text/csv');
                     responseReference.set('Content-Disposition', 'attachment;filename=Invoice.csv');
                     responseReference.send(csvString);
                 });
-
-        })
+        });
     }
 };

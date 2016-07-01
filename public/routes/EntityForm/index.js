@@ -22,7 +22,7 @@ export default class EntityForm extends React.Component {
         };
 
         fetch(entityApiPath, fetchConfig)
-            .then((err, res) => browserHistory.push(this.props.route.apipath))
+            .then(res => browserHistory.push(this.props.route.apipath))
             .catch(err => console.log(err));
     }
 
