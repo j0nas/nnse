@@ -1,4 +1,14 @@
 /**
+ * Returns today's date in DD.MM.YY format.
+ * @return {string} Today's date, formatted
+ */
+function getFormattedDate() {
+    const date = new Date();
+    const year = date.getFullYear();
+    return date.getDate() + '.' + date.getMonth() + '.' + String(year).slice(2, 4);
+}
+
+/**
  * Generates a delimiter-separated string in a specific order with values derived from lease parameter.
  * @param {object} lease The lease entity which to derive the values from
  * @param {string} delimiter The separator to use between the values in the resulting string
@@ -6,17 +16,16 @@
  * @return {string} The string with values representing formatted invoice data
  */
 function generateInvoiceCsvLine(lease, delimiter, invoiceId) {
-    const date = new Date();
-    const year = date.getFullYear();
-    const currentDate = date.getDate() + '.' + date.getMonth() + '.' + String(year).slice(2, 4);
-
-    const art = 1;
-    const dato = currentDate;
+    const art = 1; // 1 = faktura, 2 = kreditnota
+    const dato = getFormattedDate();
     const bilag = invoiceId; // fakturanummer
     const mva = 9;
     const debetkonto = lease._tenant._id; // kundenummer
     const kreditkonto = "";
-    const beloep = lease._room && lease._room.rent;
+
+    const INCREASED_PRICE_FOR_HAVING_SECONDARY_TENANT = 1000;
+    const additionalAmount = lease._secondaryTenant ? INCREASED_PRICE_FOR_HAVING_SECONDARY_TENANT : 0;
+    const beloep = lease._room && (Number(lease._room.rent) + additionalAmount);
 
     const orderedValues = [art, dato, bilag, mva, debetkonto, kreditkonto, beloep];
     return orderedValues.join(delimiter);
