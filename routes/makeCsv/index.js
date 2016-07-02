@@ -8,6 +8,10 @@ function getFormattedDate() {
     return date.getDate() + '.' + (date.getMonth() + 1) + '.' + String(year).slice(2, 4);
 }
 
+/**
+ * SSoT function defining the additional lease fee for having a secondary tenant
+ * @return {number} The fee
+ */
 function getSecondaryTenantPriceAdditionAmount() {
     return 1000;
 }
@@ -60,6 +64,13 @@ function generateAddressCsvLine(lease, delimiter) {
     return orderedValues.join(delimiter);
 }
 
+/**
+ * Generates a string containing invoice data based on leases data
+ * @param {string} delimiter The separator to use for the resulting string
+ * @param {object} leases Leases data which to base the CSV output on
+ * @param {number} count The initial index which to start with for IDs
+ * @return {string} The CSV string
+ */
 function getInvoiceCsvString(delimiter, leases, count) {
     const invoiceHeaderColumns = ["Art", "Dato", "Bilag", "Mva", "debetkonto", "kreditkonto", "Beløp"];
     const invoiceHeaderString = invoiceHeaderColumns.join(delimiter) + "\n";
@@ -69,6 +80,12 @@ function getInvoiceCsvString(delimiter, leases, count) {
     return invoiceHeaderString + invoiceCsvLines;
 }
 
+/**
+ * Generates a string of CSV containing address data based on leases data
+ * @param {string} delimiter The separator to use for the resulting string
+ * @param {object} leases Leases data which to base the CSV output on
+ * @return {string} The CSV string
+ */
 function getAddressCsvString(delimiter, leases) {
     const addressHeaderColumns =
         ["kontonummer", "Navn", "adresse", "postnummer", "Poststed", "telefonnummer", "adresse 2"];
@@ -78,16 +95,21 @@ function getAddressCsvString(delimiter, leases) {
     return addressHeaderString + addressCsvLines;
 }
 
+/**
+ * Creates an array of objects in accordance with the Invoice mongoose model based on provided leases
+ * @param {object} leases The foundation which to create the objects from
+ * @return {array} The resulting array containing invoice data
+ */
 function createInvoiceObjects(leases) {
     return leases.map(lease => {
-            const priceAddition = lease._secondaryTenant ? getSecondaryTenantPriceAdditionAmount() : 0;
-            const leaseCost = Number(lease._room.rent) + priceAddition;
-            return {
-                amount: leaseCost,
-                date: getFormattedDate(),
-                tenant: lease._tenant._id
-            }
-        }
+        const priceAddition = lease._secondaryTenant ? getSecondaryTenantPriceAdditionAmount() : 0;
+        const leaseCost = Number(lease._room.rent) + priceAddition;
+        return {
+            amount: leaseCost,
+            date: getFormattedDate(),
+            tenant: lease._tenant._id
+        };
+    }
     );
 }
 
@@ -103,8 +125,6 @@ module.exports = {
                 return;
             }
 
-            console.log("Invoice start ID: ", invoiceStartId);
-
             fetch(leasesPath)
                 .then(leases => leases.json())
                 .then(leases => {
@@ -116,7 +136,7 @@ module.exports = {
                     const invoicesToBePersisted = createInvoiceObjects(leases);
                     invoiceModel.create(invoicesToBePersisted, err => {
                         if (err) {
-                            console.log("Error persisting invoice objects: " + err)
+                            console.log("Error persisting invoice objects: " + err);
                         }
 
                         responseReference.set('Content-Type', 'text/csv');
