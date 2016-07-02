@@ -8,6 +8,10 @@ function getFormattedDate() {
     return date.getDate() + '.' + (date.getMonth() + 1) + '.' + String(year).slice(2, 4);
 }
 
+function getSecondaryTenantPriceAdditionAmount() {
+    return 1000;
+}
+
 /**
  * Generates a delimiter-separated string in a specific order with values derived from lease parameter.
  * @param {object} lease The lease entity which to derive the values from
@@ -23,8 +27,7 @@ function generateInvoiceCsvLine(lease, delimiter, invoiceId) {
     const debetkonto = lease._tenant._id; // kundenummer
     const kreditkonto = "";
 
-    const INCREASED_PRICE_FOR_HAVING_SECONDARY_TENANT = 1000;
-    const additionalAmount = lease._secondaryTenant ? INCREASED_PRICE_FOR_HAVING_SECONDARY_TENANT : 0;
+    const additionalAmount = lease._secondaryTenant ? getSecondaryTenantPriceAdditionAmount() : 0;
     const beloep = lease._room && (Number(lease._room.rent) + additionalAmount);
 
     const orderedValues = [art, dato, bilag, mva, debetkonto, kreditkonto, beloep];
@@ -75,19 +78,17 @@ function getAddressCsvString(delimiter, leases) {
     return addressHeaderString + addressCsvLines;
 }
 
-function getInvoiceObjects(leases) {
-    const invoices = [];
-    let i = 0;
-    leases.forEach(lease => {
-        invoices[i] = {
-            amount: lease._room.rent,
-            date: getFormattedDate(),
-            tenant: lease._tenant._id
-        };
-        i++;
-    });
-
-    return invoices;
+function createInvoiceObjects(leases) {
+    return leases.map(lease => {
+            const priceAddition = lease._secondaryTenant ? getSecondaryTenantPriceAdditionAmount() : 0;
+            const leaseCost = Number(lease._room.rent) + priceAddition;
+            return {
+                amount: leaseCost,
+                date: getFormattedDate(),
+                tenant: lease._tenant._id
+            }
+        }
+    );
 }
 
 module.exports = {
@@ -112,7 +113,7 @@ module.exports = {
                     const addressCsvString = getAddressCsvString(delimiter, leases);
                     const finalResultString = invoiceCsvString + "\n\n" + addressCsvString;
 
-                    const invoicesToBePersisted = getInvoiceObjects(leases, invoiceStartId);
+                    const invoicesToBePersisted = createInvoiceObjects(leases);
                     invoiceModel.create(invoicesToBePersisted, err => {
                         if (err) {
                             console.log("Error persisting invoice objects: " + err)
