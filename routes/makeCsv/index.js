@@ -75,29 +75,53 @@ function getAddressCsvString(delimiter, leases) {
     return addressHeaderString + addressCsvLines;
 }
 
+function getInvoiceObjects(leases) {
+    const invoices = [];
+    let i = 0;
+    leases.forEach(lease => {
+        invoices[i] = {
+            amount: lease._room.rent,
+            date: getFormattedDate(),
+            tenant: lease._tenant._id
+        };
+        i++;
+    });
+
+    return invoices;
+}
+
 module.exports = {
     serveCsv: (responseReference, leasesPath) => {
         const fetch = require('node-fetch');
         fetch.Promise = require('bluebird');
 
         const invoiceModel = require('../../models/Invoice');
-        invoiceModel.nextCount((err, count) => {
+        invoiceModel.nextCount((err, invoiceStartId) => {
             if (err) {
-                console.log("Error fetching next ID valuue for invoices @ makeCsv/index: " + err);
+                console.log("Error fetching next ID value for invoices @ makeCsv/index: " + err);
                 return;
             }
+
+            console.log("Invoice start ID: ", invoiceStartId);
 
             fetch(leasesPath)
                 .then(leases => leases.json())
                 .then(leases => {
                     const delimiter = ",";
-                    const invoiceCsvString = getInvoiceCsvString(delimiter, leases, count);
+                    const invoiceCsvString = getInvoiceCsvString(delimiter, leases, invoiceStartId);
                     const addressCsvString = getAddressCsvString(delimiter, leases);
                     const finalResultString = invoiceCsvString + "\n\n" + addressCsvString;
 
-                    responseReference.set('Content-Type', 'text/csv');
-                    responseReference.set('Content-Disposition', 'attachment;filename=Invoice.csv');
-                    responseReference.send(finalResultString);
+                    const invoicesToBePersisted = getInvoiceObjects(leases, invoiceStartId);
+                    invoiceModel.create(invoicesToBePersisted, err => {
+                        if (err) {
+                            console.log("Error persisting invoice objects: " + err)
+                        }
+
+                        responseReference.set('Content-Type', 'text/csv');
+                        responseReference.set('Content-Disposition', 'attachment;filename=Invoice.csv');
+                        responseReference.send(finalResultString);
+                    });
                 });
         });
     }
