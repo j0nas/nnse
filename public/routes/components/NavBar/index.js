@@ -12,6 +12,7 @@ export default class NavBar extends React.Component {
                         <li><NavLink to="/mailboxes">Postbokser</NavLink></li>
                         <li><NavLink to="/invoices">Faktura</NavLink></li>
                         <li><NavLink to="/leases">Leieforhold</NavLink></li>
+                        <li><NavLink to="/csv">Fakturagenerering</NavLink></li>
                     </ul>
                 </div>
             </nav>
