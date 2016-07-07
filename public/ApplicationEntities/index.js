@@ -56,9 +56,11 @@ export default class ApplicationEntities {
                     value: "Dato",
                     type: "date"
                 },
-                comment: {
-                    value: "Kommentar",
-                    type: "text"
+                _tenant: {
+                    value: "Fakturert leietaker",
+                    type: "entity_reference",
+                    endpoint: "/tenants",
+                    identifiers: ["firstName", "middleName", "lastName"]
                 }
             };
         case "/leases":

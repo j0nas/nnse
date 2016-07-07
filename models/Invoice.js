@@ -4,8 +4,7 @@ const autoIncrement = require('mongoose-auto-increment');
 const invoiceSchema = mongoose.Schema({
     amount: Number,
     date: Date,
-    comment: String,
-    tenant: {
+    _tenant: {
         type: mongoose.Schema.Types.Number,
         ref: 'Tenant'
     }

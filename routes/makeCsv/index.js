@@ -107,7 +107,7 @@ function createInvoiceObjects(leases) {
         return {
             amount: leaseCost,
             date: getFormattedDate(),
-            tenant: lease._tenant._id
+            _tenant: lease._tenant._id
         };
     }
     );
