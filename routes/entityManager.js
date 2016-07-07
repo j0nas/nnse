@@ -1,27 +1,28 @@
 module.exports = {
     setupEntity: function(appReference, APIpathPrefix, entityName) {
+        const baseRouter = require('express').Router();
         const path = require('path');
         const pluralize = require('pluralize');
 
         const modelPath = path.join('../models/', entityName);
         const model = require(modelPath);
 
-        const baseAPI = require('../routes/resourceAPI')(model);
-
-        var decoratedAPI;
+        var decorateRouter;
         const decoratorName = entityName.toLowerCase() + 'Decorator';
         const decoratorPath = './apiDecorators/' + decoratorName;
 
         try {
-            decoratedAPI = require(decoratorPath)(baseAPI, model);
+            decorateRouter = require(decoratorPath)(baseRouter, model);
         } catch (ignored) {
         }
+
+        const router = decorateRouter ? decorateRouter : baseRouter;
+        const baseAPI = require('../routes/resourceAPI')(model, router);
 
         const routePrefix = APIpathPrefix === undefined ? '' : '/' + APIpathPrefix;
         const route = routePrefix + '/' + pluralize(entityName.toLowerCase()) + '/';
 
-        const APItoUse = decoratedAPI === undefined ? baseAPI : decoratedAPI;
-        appReference.use(route, APItoUse);
+        appReference.use(route, baseAPI);
         console.log('Set up route ' + route);
     }
 };

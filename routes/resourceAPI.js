@@ -1,6 +1,4 @@
-module.exports = function(model) {
-    var router = require('express').Router(); // eslint-disable-line new-cap
-
+module.exports = function(model, router) {
     router.get('/', (req, res, next) =>
         model.find() // TODO find a way to automate population regardless of amount of foreign entities
             .populate('_tenant')
