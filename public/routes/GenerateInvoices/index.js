@@ -14,9 +14,9 @@ export default class GenerateInvoices extends Component {
     }
 
     componentDidMount() {
-        fetch('/api/leases')
+        fetch('/api/leases/valid')
             .then(data => data.json())
-            .then(entities => this.setState({leases: entities}));
+            .then(fetchedLeases => this.setState({leases: fetchedLeases}));
     }
 
     render() {
