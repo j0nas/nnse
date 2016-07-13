@@ -32,14 +32,33 @@ export default class ContentTable extends Component {
         }
     }
 
+    componentWillUpdate(nextProps) {
+        if (this.props.apipath !== nextProps.apipath) {
+            this.setState({
+                showingAvailable: false
+            });
+        }
+    }
 
-    showUnassociatedEntities() {
+    filterAssociatedEntities() {
         const searchInput = document.getElementById('tableSearch');
         if (searchInput.value) {
             searchInput.value = '';
             Array.from(document.getElementById('entityTable').tBodies[0].rows).forEach(row => {
                 row.style.display = "table-row";
             });
+        }
+
+        if (this.state.showingAvailable) {
+            fetch("/api" + this.props.apipath)
+                .then(res => res.json())
+                .then(fetchedEntities =>
+                    this.setState({
+                        entities: fetchedEntities,
+                        showingAvailable: false
+                    }));
+
+            return;
         }
 
         fetch("/api/leases")
@@ -51,7 +70,8 @@ export default class ContentTable extends Component {
                 });
 
                 this.setState({
-                    entities: filteredEntities
+                    entities: filteredEntities,
+                    showingAvailable: true
                 });
             });
     }
@@ -88,8 +108,8 @@ export default class ContentTable extends Component {
                                         <div className="row">
                                             <div className="col-xs-4">
                                                 <button className="btn btn-default"
-                                                        onClick={() => this.showUnassociatedEntities()}>
-                                                    Ledige
+                                                        onClick={() => this.filterAssociatedEntities()}>
+                                                    {this.state.showingAvailable ? "Ledige" : "Alle"}
                                                 </button>
                                             </div>
                                             <div className="col-xs-8">
