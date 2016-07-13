@@ -6,43 +6,73 @@ import EntityFormatter from "./EntityFormatter";
 import EntityTable from "./EntityTable";
 
 export default class ContentTable extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            entities: null
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            entities: nextProps.entities
+        })
+    }
+
+    getPropertyNameFromApiPath(apiPath) {
+        switch (apiPath) {
+            case "/tenants":
+                return ["_tenant", "_secondaryTenant"];
+            case "/rooms":
+                return ["_room"];
+            case "/mailboxes":
+                return ["_mailbox"];
+            default:
+                throw new Error("Unknown apiPath: " + apiPath)
+        }
+    }
+
+
     showUnassociatedEntities() {
-        // new branch!
-        // clear search field query first?
-
-        // iterate trhough entities, see if they are associated with entities found in given /apipath (leases)
-        console.log(this.props.entities);
-        /*
-        const searchText = event.target.value.toLowerCase();
-        const entityTable = document.getElementById(this.props.tableId);
-        const rows = Array.from(entityTable.tBodies[0].rows);
-
-        if (searchText === "") {
-            rows.forEach(row => {
+        const searchInput = document.getElementById('tableSearch');
+        if (searchInput.value) {
+            searchInput.value = '';
+            Array.from(document.getElementById('entityTable').tBodies[0].rows).forEach(row => {
                 row.style.display = "table-row";
             });
-            return;
         }
 
-        rows.forEach(row => {
-            const cellCount = row.cells.length;
-            for (let j = 0; j < cellCount; j++) {
-                if (row.cells[j].textContent.toLowerCase().includes(searchText)) {
-                    row.style.display = "table-row";
-                    break;
-                }
+        fetch("/api/leases")
+            .then(res => res.json())
+            .then(leases => {
+                let filteredEntities = this.state.entities;
+                this.getPropertyNameFromApiPath(this.props.apipath).forEach(prop => {
+                    filteredEntities = this.filterEntities(filteredEntities, leases, prop);
+                });
 
-                if (j === cellCount - 1) {
-                    row.style.display = "none";
-                }
-            }
-        });*/
+                this.setState({
+                    entities: filteredEntities
+                });
+            });
+    }
+
+    filterEntities(entities, leases, propName) {
+        if (!entities || !leases) {
+            return null;
+        }
+
+        return entities.filter(entity =>
+            !leases.some(lease => lease[propName] && lease[propName]._id === entity._id));
     }
 
     render() {
+        if (!this.state || !this.state.entities) {
+            return <div></div>;
+        }
+
         const apiPath = this.props.apipath;
         const entityObject = ApplicationEntities.getEntityObject(apiPath);
-        const formattedEntities = EntityFormatter.formatEntities(this.props.entities, entityObject, apiPath);
+        const formattedEntities = EntityFormatter.formatEntities(this.state.entities, entityObject, apiPath);
 
         return (
             <div className="carEvaluationInfoContain">
