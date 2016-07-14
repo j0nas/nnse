@@ -28,7 +28,7 @@ export default class ContentTable extends Component {
             case "/mailboxes":
                 return ["_mailbox"];
             default:
-                throw new Error("Unknown apiPath: " + apiPath)
+                return null;
         }
     }
 
@@ -107,10 +107,13 @@ export default class ContentTable extends Component {
                                     <div className="col-xs-offset-6 col-xs-4">
                                         <div className="row">
                                             <div className="col-xs-4">
-                                                <button className="btn btn-default"
-                                                        onClick={() => this.filterAssociatedEntities()}>
+                                                {
+                                                    this.getPropertyNameFromApiPath(this.props.apipath) &&
+                                                    <button className="btn btn-default"
+                                                    onClick={() => this.filterAssociatedEntities()}>
                                                     {this.state.showingAvailable ? "Ledige" : "Alle"}
-                                                </button>
+                                                    </button>
+                                                }
                                             </div>
                                             <div className="col-xs-8">
                                                 <TableSearchInput placeholder="Søk" id="tableSearch"
