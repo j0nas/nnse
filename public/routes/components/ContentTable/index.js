@@ -10,25 +10,25 @@ export default class ContentTable extends Component {
         super(props);
         this.state = {
             entities: null
-        }
+        };
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             entities: nextProps.entities
-        })
+        });
     }
 
     getPropertyNameFromApiPath(apiPath) {
         switch (apiPath) {
-            case "/tenants":
-                return ["_tenant", "_secondaryTenant"];
-            case "/rooms":
-                return ["_room"];
-            case "/mailboxes":
-                return ["_mailbox"];
-            default:
-                return null;
+        case "/tenants":
+            return ["_tenant", "_secondaryTenant"];
+        case "/rooms":
+            return ["_room"];
+        case "/mailboxes":
+            return ["_mailbox"];
+        default:
+            return null;
         }
     }
 
