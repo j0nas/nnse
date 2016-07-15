@@ -106,7 +106,7 @@ function createInvoiceObjects(leases) {
         const leaseCost = Number(lease._room.rent) + priceAddition;
         return {
             amount: leaseCost,
-            date: getFormattedDate(),
+            date: new Date(),
             _tenant: lease._tenant._id
         };
     }
