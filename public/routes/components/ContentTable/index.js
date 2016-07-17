@@ -85,6 +85,19 @@ export default class ContentTable extends Component {
             !leases.some(lease => lease[propName] && lease[propName]._id === entity._id));
     }
 
+    generateTablePdf() {
+        if (!this.state || !this.state.entities) {
+            console.log("No entities for PDF.");
+            return;
+        }
+
+
+        const entityTable = document.getElementsByClassName("carEvaluationInfoContain");
+        // htmlPdf.create(entityTable).toFile((err, res) => {
+        //     console.log("result: ", err, res);
+        // })
+    }
+
     render() {
         if (!this.state || !this.state.entities) {
             return <div></div>;
@@ -93,7 +106,14 @@ export default class ContentTable extends Component {
         const apiPath = this.props.apipath;
         const entityObject = ApplicationEntities.getEntityObject(apiPath);
         const formattedEntities = EntityFormatter.formatEntities(this.state.entities, entityObject, apiPath);
+        /*
+         <button className="btn btn-default"
+         onClick={(() => this.generateTablePdf())}>
+         Generer PDF
+         </button>
 
+
+         */
         return (
             <div className="carEvaluationInfoContain">
                 <div className="containerHeading">
@@ -114,6 +134,12 @@ export default class ContentTable extends Component {
                                                     {this.state.showingAvailable ? "Ledige" : "Alle"}
                                                     </button>
                                                 }
+
+                                                <form action="/api/makepdf" method="get">
+                                                    <button className="btn btn-default" type="submit">
+                                                        Generér PDF
+                                                    </button>
+                                                </form>
                                             </div>
                                             <div className="col-xs-8">
                                                 <TableSearchInput placeholder="Søk" id="tableSearch"
