@@ -1,39 +1,31 @@
+const pdf = require('html-pdf');
+const path = require('path');
+
+const pdfPath = __dirname;
+const pdfName = "document.pdf";
+const pdfCompletePath = path.join(pdfPath, pdfName);
+
 module.exports = {
-    servePdf: (requestReference, responseReference) => {
-        // const htmlPdf = require('html-pdf');
-        console.log("reqres: ", requestReference.body);
+    generatePdf: (requestReference, responseReference) => {
+        const html = "<div>" + JSON.stringify(requestReference.body) + "</div>";
 
-        return;
-
-        const fetch = require('node-fetch');
-        fetch.Promise = require('bluebird');
-
-        const invoiceModel = require('../../models/Invoice');
-        invoiceModel.nextCount((err, invoiceStartId) => {
+        pdf.create(html).toFile(pdfCompletePath, err => {
             if (err) {
-                console.log("Error fetching next ID value for invoices @ makeCsv/index: " + err);
+                console.log("Error when creaing PDF:", err);
+                responseReference.sendStatus(500);
                 return;
             }
-            /*
-            fetch(leasesPath)
-                .then(leases => leases.json())
-                .then(leases => {
-                    const delimiter = ",";
-                    const invoiceCsvString = getInvoiceCsvString(delimiter, leases, invoiceStartId);
-                    const addressCsvString = getAddressCsvString(delimiter, leases);
-                    const finalResultString = invoiceCsvString + "\n\n" + addressCsvString;
 
-                    const invoicesToBePersisted = createInvoiceObjects(leases);
-                    invoiceModel.create(invoicesToBePersisted, err => {
-                        if (err) {
-                            console.log("Error persisting invoice objects: " + err);
-                        }
+            responseReference.status(200).json(pdfName);
+        });
+    },
 
-                        responseReference.set('Content-Type', 'text/csv');
-                        responseReference.set('Content-Disposition', 'attachment;filename=Invoice.csv');
-                        responseReference.send(finalResultString);
-                    });
-                });*/
+    downloadPdf: (requestReference, responseReference) => {
+        const pdfToDownload = path.join(pdfPath, requestReference.query.q);
+        responseReference.download(pdfToDownload, pdfName, err => {
+            if (err) {
+                console.log("Error when downloading PDF:", err)
+            }
         });
     }
 };

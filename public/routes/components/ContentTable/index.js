@@ -91,16 +91,15 @@ export default class ContentTable extends Component {
             return;
         }
 
-        const entityTable = document.getElementsByClassName("carEvaluationInfoContain");
-        const body = JSON.stringify(this.state.entities);
-
-        fetch("/api/makepdf", {
+        const options = {
             method: "POST",
             headers: new Headers({'Content-Type': 'application/json'}),
-            body: body
-        })
+            body: JSON.stringify(this.state.entities)
+        };
+
+        fetch("/api/makepdf", options)
             .then(res => res.json())
-            .then(res => console.log("result"));
+            .then(res => window.open("/api/downloadpdf?q=" + res));
     }
 
     render() {
@@ -111,14 +110,7 @@ export default class ContentTable extends Component {
         const apiPath = this.props.apipath;
         const entityObject = ApplicationEntities.getEntityObject(apiPath);
         const formattedEntities = EntityFormatter.formatEntities(this.state.entities, entityObject, apiPath);
-        /*
-         <button className="btn btn-default"
-         onClick={(() => this.generateTablePdf())}>
-         Generer PDF
-         </button>
 
-
-         */
         return (
             <div className="carEvaluationInfoContain">
                 <div className="containerHeading">
@@ -139,12 +131,11 @@ export default class ContentTable extends Component {
                                                         {this.state.showingAvailable ? "Ledige" : "Alle"}
                                                     </button>
                                                 }
-                                                <form action="/api/makepdf" method="get">
-                                                    <button className="btn btn-default" type="button"
-                                                            onClick={() => this.generateTablePdf()}>
-                                                        Generér PDF
+
+                                                    <button className="btn btn-default" onClick={() => this.generateTablePdf()}>
+                                                        Generer PDF
                                                     </button>
-                                                </form>
+
                                             </div>
                                             <div className="col-xs-8">
                                                 <TableSearchInput placeholder="Søk" id="tableSearch"
