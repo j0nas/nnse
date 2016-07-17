@@ -21,14 +21,14 @@ export default class ContentTable extends Component {
 
     getPropertyNameFromApiPath(apiPath) {
         switch (apiPath) {
-        case "/tenants":
-            return ["_tenant", "_secondaryTenant"];
-        case "/rooms":
-            return ["_room"];
-        case "/mailboxes":
-            return ["_mailbox"];
-        default:
-            return null;
+            case "/tenants":
+                return ["_tenant", "_secondaryTenant"];
+            case "/rooms":
+                return ["_room"];
+            case "/mailboxes":
+                return ["_mailbox"];
+            default:
+                return null;
         }
     }
 
@@ -91,11 +91,16 @@ export default class ContentTable extends Component {
             return;
         }
 
-
         const entityTable = document.getElementsByClassName("carEvaluationInfoContain");
-        // htmlPdf.create(entityTable).toFile((err, res) => {
-        //     console.log("result: ", err, res);
-        // })
+        const body = JSON.stringify(this.state.entities);
+
+        fetch("/api/makepdf", {
+            method: "POST",
+            headers: new Headers({'Content-Type': 'application/json'}),
+            body: body
+        })
+            .then(res => res.json())
+            .then(res => console.log("result"));
     }
 
     render() {
@@ -130,13 +135,13 @@ export default class ContentTable extends Component {
                                                 {
                                                     this.getPropertyNameFromApiPath(this.props.apipath) &&
                                                     <button className="btn btn-default"
-                                                    onClick={() => this.filterAssociatedEntities()}>
-                                                    {this.state.showingAvailable ? "Ledige" : "Alle"}
+                                                            onClick={() => this.filterAssociatedEntities()}>
+                                                        {this.state.showingAvailable ? "Ledige" : "Alle"}
                                                     </button>
                                                 }
-
                                                 <form action="/api/makepdf" method="get">
-                                                    <button className="btn btn-default" type="submit">
+                                                    <button className="btn btn-default" type="button"
+                                                            onClick={() => this.generateTablePdf()}>
                                                         Generér PDF
                                                     </button>
                                                 </form>
@@ -168,4 +173,3 @@ export default class ContentTable extends Component {
 ContentTable.propTypes = {
     entities: PropTypes.array.isRequired
 };
-
