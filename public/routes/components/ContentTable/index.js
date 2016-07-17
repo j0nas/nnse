@@ -116,39 +116,26 @@ export default class ContentTable extends Component {
                 <div className="containerHeading">
                     <div className="container-fluid">
                         <div className="row">
-                            <div className="col-xs-6">
+                            <div className="col-xs-4 col-lg-8">
                                 {this.props.title}
                             </div>
-                            <div className="col-xs-6">
-                                <div className="row text-right">
-                                    <div className="col-xs-offset-6 col-xs-4">
-                                        <div className="row">
-                                            <div className="col-xs-4">
-                                                {
-                                                    this.getPropertyNameFromApiPath(this.props.apipath) &&
-                                                    <button className="btn btn-default"
-                                                            onClick={() => this.filterAssociatedEntities()}>
-                                                        {this.state.showingAvailable ? "Ledige" : "Alle"}
-                                                    </button>
-                                                }
-
-                                                    <button className="btn btn-default" onClick={() => this.generateTablePdf()}>
-                                                        Generer PDF
-                                                    </button>
-
-                                            </div>
-                                            <div className="col-xs-8">
-                                                <TableSearchInput placeholder="Søk" id="tableSearch"
-                                                                  tableId={"entityTable"}/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-xs-2">
-                                        <Link className="btn btn-primary form-control" to={apiPath + '/new'}>
-                                            Opprett ny
-                                        </Link>
-                                    </div>
-                                </div>
+                            <div className="col-xs-2 col-lg-1">
+                                <TableSearchInput placeholder="Søk" id="tableSearch" tableId={"entityTable"}/>
+                            </div>
+                            <div className="col-xs-2 col-lg-1">
+                                {this.getPropertyNameFromApiPath(this.props.apipath) &&
+                                <button className="btn btn-default btn-block"
+                                        onClick={() => this.filterAssociatedEntities()}>
+                                    {this.state.showingAvailable ? "Ledige" : "Alle"}
+                                </button>}
+                            </div>
+                            <div className="col-xs-2 col-lg-1">
+                                <button className="btn btn-default btn-block" onClick={() => this.generateTablePdf()}>
+                                    PDF
+                                </button>
+                            </div>
+                            <div className="col-xs-2 col-lg-1">
+                                <Link className="btn btn-primary form-control" to={apiPath + '/new'}>Opprett</Link>
                             </div>
                         </div>
                     </div>
