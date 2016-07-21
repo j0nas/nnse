@@ -21,14 +21,14 @@ export default class ContentTable extends Component {
 
     getPropertyNameFromApiPath(apiPath) {
         switch (apiPath) {
-            case "/tenants":
-                return ["_tenant", "_secondaryTenant"];
-            case "/rooms":
-                return ["_room"];
-            case "/mailboxes":
-                return ["_mailbox"];
-            default:
-                return null;
+        case "/tenants":
+            return ["_tenant", "_secondaryTenant"];
+        case "/rooms":
+            return ["_room"];
+        case "/mailboxes":
+            return ["_mailbox"];
+        default:
+            return null;
         }
     }
 

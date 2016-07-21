@@ -13,32 +13,39 @@ function createTableHeader(entityObject) {
         ) + "</tr>";
 }
 
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = (date.getDate() > 9 ? "" : "0") + (date.getDate());
+    const month = (date.getMonth() > 8 ? "" : "0") + (date.getMonth() + 1);
+
+    return `${day}.${month}.${date.getFullYear()}`;
+}
+
 function formatEntityContent(entityObject, key, entity) {
     if (!entityObject[key].type || !entity[key]) {
         return entity[key] || "";
     }
 
     switch (entityObject[key].type) {
-        case "entity_reference":
-            return entityObject[key].identifiers.map(identifier => entity[key][identifier]).join(" ");
-        case "date":
-            return "DATE!!";
-        default:
-            throw new Error("Unhandled type: " + entityObject[key].type);
+    case "entity_reference":
+        return entityObject[key].identifiers.map(identifier => entity[key][identifier]).join(" ");
+    case "date":
+        return formatDate(entity[key]);
+    default:
+        return entity[key];
     }
 }
 
 function createTableContent(requestReference, entityObject) {
-    const tableContent =
-        requestReference.body.entities.map(entity =>
-            "<tr>" +
-                Object.keys(entityObject).map(key =>
-                    "<td>" +
-                        formatEntityContent(entityObject, key, entity) +
-                    "</td>").join("") +
-            "</tr>").join("");
-
-    return tableContent;
+    return requestReference.body.entities
+        .map(entity => (
+            "<tr>" + (
+                Object
+                    .keys(entityObject)
+                    .map(key => "<td>" + formatEntityContent(entityObject, key, entity) + "</td>")
+                    .join("")
+            ) + "</tr>")
+        ).join("");
 }
 
 module.exports = {
@@ -46,7 +53,7 @@ module.exports = {
         if (!requestReference.body.entities) {
             console.log("Error when creaing PDF: no entities defined in request.");
             responseReference.sendStatus(400);
-            return
+            return;
         }
 
         const ApplicationEntities = require("../../public/ApplicationEntities");
@@ -71,7 +78,7 @@ module.exports = {
         const pdfToDownload = path.join(pdfPath, requestReference.query.q);
         responseReference.download(pdfToDownload, pdfName, err => {
             if (err) {
-                console.log("Error when downloading PDF:", err)
+                console.log("Error when downloading PDF:", err);
             }
         });
     }
