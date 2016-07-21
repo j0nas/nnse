@@ -91,10 +91,15 @@ export default class ContentTable extends Component {
             return;
         }
 
+        const entitiesToPdfify = {
+            entities: this.state.entities,
+            apipath: this.props.apipath
+        };
+
         const options = {
             method: "POST",
             headers: new Headers({'Content-Type': 'application/json'}),
-            body: JSON.stringify(this.state.entities)
+            body: JSON.stringify(entitiesToPdfify)
         };
 
         fetch("/api/makepdf", options)
