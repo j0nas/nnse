@@ -37,6 +37,10 @@ const makeCsv = require('./routes/makeCsv');
 const leasesEndpoint = "/api/leases";
 app.use("/api/makecsv", (req, res) => makeCsv.serveCsv(res, url + leasesEndpoint));
 
+const makePdf = require('./routes/makePdf');
+app.use("/api/makepdf", (req, res) => makePdf.generatePdf(req, res));
+app.use("/api/downloadpdf", (req, res) => makePdf.downloadPdf(req, res));
+
 const indexHtmlPath = path.join(__dirname, 'public', 'index.html');
 app.use((req, res) => res.sendFile(indexHtmlPath));
 

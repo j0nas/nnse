@@ -1,5 +1,5 @@
-export default class ApplicationEntities {
-    static getEntityObject(apiPath) {
+module.exports = {
+    getEntityObject(apiPath) {
         switch (apiPath) {
         case "/tenants":
             return {
@@ -103,4 +103,4 @@ export default class ApplicationEntities {
             throw new Error("Unknown entity path: " + apiPath);
         }
     }
-}
+};
