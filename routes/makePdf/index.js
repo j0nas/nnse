@@ -6,15 +6,26 @@ const pdfName = "document.pdf";
 const pdfCompletePath = path.join(pdfPath, pdfName);
 
 function createTableHeader(entityObject) {
-    const tableHeader =
-        "<tr>" +
+    return "<tr>" + (
             Object.keys(entityObject).map(key =>
-                "<th>" +
-                    entityObject[key].value +
-                "</th>").join("") +
-        "</tr>";
+                "<th>" + entityObject[key].value + "</th>"
+            ).join("")
+        ) + "</tr>";
+}
 
-    return tableHeader;
+function formatEntityContent(entityObject, key, entity) {
+    if (!entityObject[key].type || !entity[key]) {
+        return entity[key] || "";
+    }
+
+    switch (entityObject[key].type) {
+        case "entity_reference":
+            return entityObject[key].identifiers.map(identifier => entity[key][identifier]).join(" ");
+        case "date":
+            return "DATE!!";
+        default:
+            throw new Error("Unhandled type: " + entityObject[key].type);
+    }
 }
 
 function createTableContent(requestReference, entityObject) {
@@ -23,7 +34,7 @@ function createTableContent(requestReference, entityObject) {
             "<tr>" +
                 Object.keys(entityObject).map(key =>
                     "<td>" +
-                        entity[key] +
+                        formatEntityContent(entityObject, key, entity) +
                     "</td>").join("") +
             "</tr>").join("");
 
@@ -40,14 +51,10 @@ module.exports = {
 
         const ApplicationEntities = require("../../public/ApplicationEntities");
         const entityObject = ApplicationEntities.getEntityObject(requestReference.body.apipath);
-        var tableHeader = createTableHeader(entityObject);
-        var tableContent = createTableContent(requestReference, entityObject);
+        const tableHeader = createTableHeader(entityObject);
+        const tableContent = createTableContent(requestReference, entityObject);
 
-        const table =
-            "<table>" +
-            tableHeader +
-            tableContent +
-            "</table>";
+        const table = "<table style='width: 100%; text-align: center'>" + tableHeader + tableContent + "</table>";
 
         pdf.create(table).toFile(pdfCompletePath, err => {
             if (err) {
