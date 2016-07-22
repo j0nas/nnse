@@ -9,15 +9,6 @@ module.exports = {
         publicPath: '/build/'
     },
     devtool: false,
-    plugins: [
-        new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
-        new webpack.ProvidePlugin({fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'}),
-        new webpack.DefinePlugin({
-            'process.env': { // eslint-disable-line quote-props
-                'NODE_ENV': JSON.stringify('production')
-            }
-        })
-    ],
     module: {
         loaders: [
             {test: /\.css$/, loader: 'style!css'},
@@ -30,11 +21,19 @@ module.exports = {
                     presets: ['es2015', 'react'],
                     plugins: [
                         'transform-react-remove-prop-types',
-                        'transform-react-constant-elements',
-                        'transform-react-inline-elements'
+                        'transform-react-constant-elements'
                     ]
                 }
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
+        new webpack.ProvidePlugin({fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'}),
+        new webpack.DefinePlugin({
+            'process.env': { // eslint-disable-line quote-props
+                'NODE_ENV': JSON.stringify('production')
+            }
+        })
+    ]
 };
